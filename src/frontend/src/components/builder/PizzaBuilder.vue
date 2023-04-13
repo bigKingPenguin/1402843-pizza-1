@@ -6,17 +6,17 @@
 
         <BuilderDoughtSelector
           :pizzaDough="pizzaDough"
-          @doughSelected="selectedDough = $event"
+          @doughSelected="pizzaData.selectedDough = $event"
         />
         <BuilderSizeSelector
           :pizzaSizes="pizzaSizes"
-          @sizeSelected="selectedSize = $event"
+          @sizeSelected="pizzaData.selectedSize = $event"
         />
         <BuilderIngredientsSelector
           :pizzaSauce="pizzaSauce"
           :pizzaFilling="pizzaFilling"
-          @sauceSelected="selectedSauce = $event"
-          @fillingSelected="selectedFilling[$event.value] = $event"
+          @sauceSelected="pizzaData.selectedSauce = $event"
+          @fillingSelected="addFilling"
         />
 
         <div class="content__pizza">
@@ -26,16 +26,16 @@
             inputName="pizza_name"
             inputPlaceholder="Введите название пиццы"
             isRequired
-            @onInput="selectedPizzaName = $event"
+            @onInput="pizzaData.selectedPizzaName = $event"
           />
           <BuilderPizzaView
-            :pizzaDough="selectedDough"
-            :pizzaSauce="selectedSauce"
-            :pizzaFilling="selectedFilling"
+            :pizzaDough="pizzaData.selectedDough"
+            :pizzaSauce="pizzaData.selectedSauce"
+            :pizzaFilling="pizzaData.selectedFilling"
           />
 
           <div class="content__result">
-            <BuilderPriceCounter :pizzaPrice="pizzaPrice"/>
+            <BuilderPriceCounter :pizzaPrice="countPrice"/>
             <Button
               :class="{'button--disabled': !isReadyToCook}"
               :disabled="!isReadyToCook"
@@ -69,75 +69,44 @@
         pizzaSizes: pizza.sizes,
         pizzaSauce: pizza.sauces,
         pizzaFilling: pizza.ingredients,
-        selectedPizzaName: '',
-        selectedDough: {},
-        selectedSize: {},
-        selectedSauce: {},
-        selectedFilling: {
-          mushrooms: {},
-          cheddar: {},
-          salami: {},
-          ham: {},
-          ananas: {},
-          bacon: {},
-          onion: {},
-          chile: {},
-          jalapeno: {},
-          olives: {},
-          tomatoes: {},
-          salmon: {},
-          mozzarella: {},
-          parmesan: {},
-          blue_cheese: {},
+        pizzaData: {
+          selectedPizzaName: '',
+          selectedDough: {},
+          selectedSize: {},
+          selectedSauce: {},
+          selectedFilling: {},
         },
-        pizzaPrice: 0,
-        isReadyToCook: false,
       };
     },
-    watch: {
-      pizzaData: {
-        deep: true,
-        handler() {
-          this.getPizzaPrice();
-          this.checkReadyToCook();
-        },
+    computed: {
+      isReadyToCook() {
+        return Object.keys(this.pizzaData.selectedFilling).length && this.pizzaData.selectedPizzaName;
+      },
+      countPrice() {
+        let pizzaPrice = 0;
+        let fillingPrice = 0;
+        for (let fil in this.pizzaData.selectedFilling) {
+          fillingPrice += this.pizzaData.selectedFilling[fil].price * this.pizzaData.selectedFilling[fil].counter;
+        }
+        // мультипликатор размера х (стоимость теста + соус + ингредиенты)
+        if (this.pizzaData.selectedDough.price || this.pizzaData.selectedSauce.price || fillingPrice > 0) {
+          pizzaPrice = fillingPrice + (this.pizzaData.selectedDough?.price ?? 0) + (this.pizzaData.selectedSauce?.price ?? 0);
+        }
+        if (this.pizzaData.selectedSize?.multiplier) {
+          pizzaPrice = pizzaPrice * this.pizzaData.selectedSize.multiplier;
+        }
+        return pizzaPrice;
       },
     },
     methods: {
-      // getPizzaPrice() {
-      //   let fillingPrice = 0;
-      //   for (let fil in this.pizzaData.filling) {
-      //     fillingPrice += this.pizzaData.filling[fil]?.price ?? 0;
-      //   }
-      //   this.pizzaPriceData = {
-      //     sizeMultiplier: this.pizzaData.size?.multiplier ?? 0,
-      //     doughPrice: this.pizzaData.dough?.price ?? 0,
-      //     saucePrice: this.pizzaData.sauce?.price ?? 0,
-      //     ingredientPrice: fillingPrice,
-      //   };
-      // countPrice() {
-      //   // мультипликатор размера х (стоимость теста + соус + ингредиенты)
-      //   let pizzaPrice = 0;
-      //   if (this.priceData.doughPrice || this.priceData.saucePrice || this.priceData.ingredientPrice) {
-      //     pizzaPrice = this.priceData.doughPrice + this.priceData.saucePrice + this.priceData.ingredientPrice;
-      //   }
-      //   if (this.priceData.sizeMultiplier) {
-      //     pizzaPrice = pizzaPrice * this.priceData.sizeMultiplier;
-      //   }
-      //   return pizzaPrice;
-      // },
+      addFilling(filling) {
+        if (filling.value in this.pizzaData.selectedFilling && filling.counter === 0) {
+          delete this.pizzaData.selectedFilling[filling.value];
+        } else {
+          this.pizzaData.selectedFilling[filling.value] = filling;
+        }
+      },
     },
-    // checkReadyToCook() {
-    //   let ingredient = false;
-    //   for (let fil in this.pizzaData.filling) {
-    //     if (this.pizzaData.filling[fil]?.counter > 0) {
-    //       ingredient = this.pizzaData.filling[fil]?.counter > 0;
-    //       break;
-    //     }
-    //   }
-    //   this.isReadyToCook = ingredient && this.pizzaData.name;
-    // },
-    // },
   };
 </script>
 

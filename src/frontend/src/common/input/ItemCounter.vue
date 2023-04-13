@@ -45,7 +45,7 @@
 
 <script>
   import {DATA_TRANSFER_TEXT_TYPE} from '@/common/const/constants';
-  import EventBus from '@/services/eventBus';
+  import emitter from '@/services/emitter';
 
   export default {
     name: 'ItemCounter',
@@ -78,7 +78,10 @@
       };
     },
     mounted() {
-      EventBus.$on(`add-${this.data.value}`, this.counterPlus);
+      emitter.on(`add-${this.data.value}`, this.counterPlus);
+    },
+    beforeUnmount() {
+      emitter.off(`add-${this.data.value}`, this.counterPlus);
     },
     computed: {
       isDraggable() {

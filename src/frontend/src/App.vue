@@ -6,6 +6,7 @@
 
 <script>
   import Index from '@/views/Index.vue';
+  import '@/assets/scss/app.scss';
 
   export default {
     name: 'App',
@@ -13,6 +14,3 @@
   };
 </script>
 
-<style lang="scss">
-  @import "~@/assets/scss/app.scss";
-</style>
