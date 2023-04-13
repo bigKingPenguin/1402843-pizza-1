@@ -7,31 +7,28 @@
         <!--                  TODO: указать дефолтные значения для v-model-->
         <!--      TODO: в pizza.json временно добавлен value для dough-->
         <SelectorItem
-          v-for="dough in pizza.dough"
+          v-for="dough in pizzaDough"
           :key="dough.id"
           name="dough"
           :data="dough"
           @itemSelected="$emit('doughSelected', $event)"
-        >
-        </SelectorItem>
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import pizza from '@/static/pizza.json';
-  import {DOUGHT} from '@/common/const/constants';
   import SelectorItem from '@/common/input/SelectorItem.vue';
 
   export default {
     name: 'BuilderDought',
     components: {SelectorItem},
-    data() {
-      return {
-        pizza,
-        DOUGHT,
-      };
+    props: {
+      pizzaDough: {
+        type: Array,
+        required: true,
+      },
     },
   };
 </script>

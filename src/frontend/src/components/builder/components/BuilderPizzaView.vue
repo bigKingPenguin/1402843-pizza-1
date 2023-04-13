@@ -1,16 +1,6 @@
 <template>
   <div>
-    <label class="input">
-      <span class="visually-hidden">Название пиццы</span>
-      <input
-        type="text"
-        name="pizza_name"
-        placeholder="Введите название пиццы"
-        v-model="pizza_name"
-        required
-        @input="$emit('onInput', pizza_name)"
-      />
-    </label>
+
     <div class="content__constructor">
       <div
         class="pizza"
@@ -43,7 +33,15 @@
   export default {
     name: 'BuilderPizzaView',
     props: {
-      pizzaConsist: {
+      pizzaDough: {
+        type: Object,
+        required: true,
+      },
+      pizzaSauce: {
+        type: Object,
+        required: true,
+      },
+      pizzaFilling: {
         type: Object,
         required: true,
       },
@@ -56,12 +54,12 @@
     },
     computed: {
       getFoundationClass() {
-        return `pizza--foundation--${this.pizzaConsist.dough?.value ?? 'light'}-${this.pizzaConsist.sauce?.value ?? 'tomato'}`;
+        return `pizza--foundation--${this.pizzaDough?.value ?? 'light'}-${this.pizzaSauce?.value ?? 'tomato'}`;
       },
 
     },
     watch: {
-      pizzaConsist: {
+      pizzaFilling: {
         deep: true,
         handler() {
           this.getFillingElements();
@@ -77,12 +75,12 @@
       },
       getFillingElements() {
         let classNames = [];
-        for (let fil in this.pizzaConsist.filling) {
+        for (let fil in this.pizzaFilling) {
           let componentClassName;
-          if (this.pizzaConsist.filling[fil]?.counter > 0) {
-            componentClassName = `pizza__filling--${this.pizzaConsist.filling[fil].value}`;
-            if (this.pizzaConsist.filling[fil].counter > 1) {
-              componentClassName = `${componentClassName} pizza__filling--${this.pizzaConsist.filling[fil].counter === 2 ? 'second' : 'third'}`;
+          if (this.pizzaFilling[fil]?.counter > 0) {
+            componentClassName = `pizza__filling--${this.pizzaFilling[fil].value}`;
+            if (this.pizzaFilling[fil].counter > 1) {
+              componentClassName = `${componentClassName} pizza__filling--${this.pizzaFilling[fil].counter === 2 ? 'second' : 'third'}`;
             }
             classNames.push(componentClassName);
           }

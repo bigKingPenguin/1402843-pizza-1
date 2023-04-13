@@ -6,11 +6,17 @@
       </h2>
 
       <div class="sheet__content ingridients">
-        <BuilderIngredientsSauce @sauceSelected="$emit('sauceSelected', $event)"></BuilderIngredientsSauce>
+        <BuilderIngredientsSauce
+          :pizzaSauce="pizzaSauce"
+          @sauceSelected="$emit('sauceSelected', $event)"
+        />
         <div class="ingridients__filling">
           <p>Начинка:</p>
 
-          <BuilderIngredientsFilling @fillingSelected="$emit('fillingSelected', $event)"></BuilderIngredientsFilling>
+          <BuilderIngredientsFilling
+            :pizzaFilling="pizzaFilling"
+            @fillingSelected="$emit('fillingSelected', $event)"
+          />
         </div>
       </div>
     </div>
@@ -19,13 +25,23 @@
 
 <script>
   import BuilderIngredientsSauce
-    from '@/components/builder/components/BuilderIngredientsSauce.vue';
+    from '@/components/builder/components/builderIngredients/BuilderIngredientsSauce.vue';
   import BuilderIngredientsFilling
-    from '@/components/builder/components/BuilderIngredientsFilling.vue';
+    from '@/components/builder/components/builderIngredients/BuilderIngredientsFilling.vue';
 
   export default {
     name: 'BuilderIngredients',
     components: {BuilderIngredientsFilling, BuilderIngredientsSauce},
+    props: {
+      pizzaSauce: {
+        type: Array,
+        required: true,
+      },
+      pizzaFilling: {
+        type: Array,
+        required: true,
+      },
+    },
   };
 </script>
 

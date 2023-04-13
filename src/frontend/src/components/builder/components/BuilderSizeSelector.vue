@@ -6,31 +6,29 @@
         <!--                  TODO: указать дефолтные значения для v-model-->
         <!--      TODO: в pizza.json временно добавлен value для size-->
         <SelectorItem
-          v-for="size in pizza.sizes"
+          v-for="size in pizzaSizes"
           :key="size.id"
           name="diameter"
           :data="size"
           @itemSelected="$emit('sizeSelected', $event)"
-        >
-        </SelectorItem>
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import pizza from '@/static/pizza.json';
-  import {SIZE} from '@/common/const/constants';
+
   import SelectorItem from '@/common/input/SelectorItem.vue';
 
   export default {
     name: 'BuilderSize',
     components: {SelectorItem},
-    data() {
-      return {
-        pizza,
-        SIZE,
-      };
+    props: {
+      pizzaSizes: {
+        type: Array,
+        required: true,
+      },
     },
   };
 </script>
