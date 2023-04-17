@@ -14,15 +14,12 @@
       class="counter counter--orange"
       :class="`${counterType}__counter`"
     >
-      <button
-        type="button"
-        class="counter__button counter__button--minus"
-        :class="{'counter__button--disabled': counter === 0}"
-        @click="counterMinus"
-        :disabled="counter === 0"
-      >
-        <span class="visually-hidden">Меньше</span>
-      </button>
+      <CounterButton
+        counterType="minus"
+        :isDisabled="counter === 0"
+        counterDescription="Меньше"
+        @onButtonClick="counterMinus"
+      />
       <input
         type="text"
         name="counter"
@@ -30,15 +27,12 @@
         v-model="counter"
         readonly
       />
-      <button
-        type="button"
-        class="counter__button counter__button--plus"
-        @click="counterPlus"
-        :disabled="counter === this.itemMaximumCount"
-        :class="{'counter__button--disabled': counter === 0}"
-      >
-        <span class="visually-hidden">Больше</span>
-      </button>
+      <CounterButton
+        counterType="plus"
+        counter-description="Больше"
+        :isDisabled="counter === this.itemMaximumCount"
+        @onButtonClick="counterPlus"
+      />
     </div>
   </div>
 </template>
@@ -46,9 +40,11 @@
 <script>
   import {DATA_TRANSFER_TEXT_TYPE} from '@/common/const/constants';
   import emitter from '@/services/emitter';
+  import CounterButton from '@/common/button/CounterButton.vue';
 
   export default {
     name: 'ItemCounter',
+    components: {CounterButton},
     props: {
       data: {
         type: Object,

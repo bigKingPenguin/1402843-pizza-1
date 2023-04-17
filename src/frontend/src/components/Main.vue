@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import PizzaBuilder from '@/components/builder/PizzaBuilder.vue';
+  import PizzaBuilder from '@/views/PizzaBuilder.vue';
 
   export default {
     name: 'Main',

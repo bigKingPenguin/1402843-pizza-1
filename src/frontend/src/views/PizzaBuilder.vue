@@ -39,6 +39,7 @@
             <Button
               :class="{'button--disabled': !isReadyToCook}"
               :disabled="!isReadyToCook"
+              buttonText="Готовьте!"
             />
           </div>
         </div>
@@ -89,9 +90,7 @@
           fillingPrice += this.pizzaData.selectedFilling[fil].price * this.pizzaData.selectedFilling[fil].counter;
         }
         // мультипликатор размера х (стоимость теста + соус + ингредиенты)
-        if (this.pizzaData.selectedDough.price || this.pizzaData.selectedSauce.price || fillingPrice > 0) {
-          pizzaPrice = fillingPrice + (this.pizzaData.selectedDough?.price ?? 0) + (this.pizzaData.selectedSauce?.price ?? 0);
-        }
+        pizzaPrice = fillingPrice + (this.pizzaData.selectedDough?.price ?? 0) + (this.pizzaData.selectedSauce?.price ?? 0);
         if (this.pizzaData.selectedSize?.multiplier) {
           pizzaPrice = pizzaPrice * this.pizzaData.selectedSize.multiplier;
         }
