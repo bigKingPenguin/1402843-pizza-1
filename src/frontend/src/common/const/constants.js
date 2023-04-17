@@ -1,3 +1,9 @@
+// FORMATS
+
+export const DATA_TRANSFER_TEXT_TYPE = 'text/plain';
+
+// PIZZA DATA
+
 export const DOUGHT = {
   Тонкое: {
     value: 'light',
