@@ -12,7 +12,7 @@
         itemType="filling"
         itemDraggable
         :itemMaximumCount="3"
-        @quantitySelected="$emit('fillingSelected', $event)"
+        @quantitySelected="store.commit(ADD_FILLING, $event)"
       />
     </li>
   </ul>
@@ -21,6 +21,8 @@
 <script>
 
   import ItemCounter from '@/common/input/ItemCounter.vue';
+  import {useStore} from 'vuex';
+  import {ADD_FILLING} from '@/store/mutation-types';
 
   export default {
     name: 'BuilderIngredientsFilling',
@@ -30,6 +32,14 @@
         type: Array,
         required: true,
       },
+    },
+    setup() {
+      const store = useStore();
+
+      return {
+        store,
+        ADD_FILLING,
+      };
     },
   };
 </script>

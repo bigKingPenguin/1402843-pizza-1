@@ -6,17 +6,11 @@
       </h2>
 
       <div class="sheet__content ingridients">
-        <BuilderIngredientsSauce
-          :pizzaSauce="pizzaSauce"
-          @sauceSelected="$emit('sauceSelected', $event)"
-        />
+        <BuilderIngredientsSauce :pizzaSauce="pizzaSauce"/>
         <div class="ingridients__filling">
           <p>Начинка:</p>
 
-          <BuilderIngredientsFilling
-            :pizzaFilling="pizzaFilling"
-            @fillingSelected="$emit('fillingSelected', $event)"
-          />
+          <BuilderIngredientsFilling :pizzaFilling="pizzaFilling"/>
         </div>
       </div>
     </div>

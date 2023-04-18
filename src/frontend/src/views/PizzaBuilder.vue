@@ -4,19 +4,11 @@
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
 
-        <BuilderDoughtSelector
-          :pizzaDough="pizzaDough"
-          @doughSelected="pizzaData.selectedDough = $event"
-        />
-        <BuilderSizeSelector
-          :pizzaSizes="pizzaSizes"
-          @sizeSelected="pizzaData.selectedSize = $event"
-        />
+        <BuilderDoughtSelector :pizzaDough="pizzaDough"/>
+        <BuilderSizeSelector :pizzaSizes="pizzaSizes"/>
         <BuilderIngredientsSelector
           :pizzaSauce="pizzaSauce"
           :pizzaFilling="pizzaFilling"
-          @sauceSelected="pizzaData.selectedSauce = $event"
-          @fillingSelected="addFilling"
         />
 
         <div class="content__pizza">
@@ -26,16 +18,12 @@
             inputName="pizza_name"
             inputPlaceholder="Введите название пиццы"
             isRequired
-            @onInput="pizzaData.selectedPizzaName = $event"
+            @onInput="store.commit(SET_NAME, $event)"
           />
-          <BuilderPizzaView
-            :pizzaDough="pizzaData.selectedDough"
-            :pizzaSauce="pizzaData.selectedSauce"
-            :pizzaFilling="pizzaData.selectedFilling"
-          />
+          <BuilderPizzaView/>
 
           <div class="content__result">
-            <BuilderPriceCounter :pizzaPrice="countPrice"/>
+            <BuilderPriceCounter/>
             <Button
               :class="{'button--disabled': !isReadyToCook}"
               :disabled="!isReadyToCook"
@@ -57,6 +45,10 @@
   import BuilderPizzaView from '@/components/builder/components/BuilderPizzaView.vue';
   import Button from '@/common/button/Button.vue';
   import BuilderPriceCounter from '@/components/builder/components/BuilderPriceCounter.vue';
+  import {computed, ref} from 'vue';
+  import {useStore} from 'vuex';
+  import {SET_NAME} from '@/store/mutation-types';
+  import {COUNT_PRICE, IS_READY_TO_COOK} from '@/store/getter-types';
 
   export default {
     name: 'PizzaBuilder',
@@ -64,47 +56,24 @@
       BuilderPriceCounter,
       Button, BuilderPizzaView, BuilderIngredientsSelector, BuilderSizeSelector, BuilderDoughtSelector, Input,
     },
-    data() {
+    setup() {
+      const store = useStore();
+
+      const pizzaDough = ref(pizza.dough);
+      const pizzaSizes = ref(pizza.sizes);
+      const pizzaSauce = ref(pizza.sauces);
+      const pizzaFilling = ref(pizza.ingredients);
+
       return {
-        pizzaDough: pizza.dough,
-        pizzaSizes: pizza.sizes,
-        pizzaSauce: pizza.sauces,
-        pizzaFilling: pizza.ingredients,
-        pizzaData: {
-          selectedPizzaName: '',
-          selectedDough: {},
-          selectedSize: {},
-          selectedSauce: {},
-          selectedFilling: {},
-        },
+        store,
+        pizzaDough,
+        pizzaSizes,
+        pizzaSauce,
+        pizzaFilling,
+        SET_NAME,
+        isReadyToCook: computed(() => store.getters[IS_READY_TO_COOK]),
+        countPrice: computed(() => store.getters[COUNT_PRICE]),
       };
-    },
-    computed: {
-      isReadyToCook() {
-        return Object.keys(this.pizzaData.selectedFilling).length && this.pizzaData.selectedPizzaName;
-      },
-      countPrice() {
-        let pizzaPrice = 0;
-        let fillingPrice = 0;
-        for (let fil in this.pizzaData.selectedFilling) {
-          fillingPrice += this.pizzaData.selectedFilling[fil].price * this.pizzaData.selectedFilling[fil].counter;
-        }
-        // мультипликатор размера х (стоимость теста + соус + ингредиенты)
-        pizzaPrice = fillingPrice + (this.pizzaData.selectedDough?.price ?? 0) + (this.pizzaData.selectedSauce?.price ?? 0);
-        if (this.pizzaData.selectedSize?.multiplier) {
-          pizzaPrice = pizzaPrice * this.pizzaData.selectedSize.multiplier;
-        }
-        return pizzaPrice;
-      },
-    },
-    methods: {
-      addFilling(filling) {
-        if (filling.value in this.pizzaData.selectedFilling && filling.counter === 0) {
-          delete this.pizzaData.selectedFilling[filling.value];
-        } else {
-          this.pizzaData.selectedFilling[filling.value] = filling;
-        }
-      },
     },
   };
 </script>

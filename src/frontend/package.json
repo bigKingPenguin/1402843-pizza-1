@@ -28,7 +28,6 @@
     "flush-promises": "^1.0.2",
     "lodash": "^4.17.21",
     "vue": "^3.2.19",
-    "@vue/compat": "^3.2.19",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
   },

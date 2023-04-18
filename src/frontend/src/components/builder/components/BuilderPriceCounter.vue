@@ -3,13 +3,18 @@
 </template>
 
 <script>
+  import {useStore} from 'vuex';
+  import {computed} from 'vue';
+  import {COUNT_PRICE} from '@/store/getter-types';
+
   export default {
     name: 'BuilderPriceCounter',
-    props: {
-      pizzaPrice: {
-        type: Number,
-        required: true,
-      },
+    setup() {
+      const store = useStore();
+
+      return {
+        pizzaPrice: computed(() => store.getters[COUNT_PRICE]),
+      };
     },
   };
 
