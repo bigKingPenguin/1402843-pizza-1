@@ -10,7 +10,7 @@
           :key="size.id"
           name="diameter"
           :data="size"
-          @itemSelected="$emit('sizeSelected', $event)"
+          @itemSelected="store.commit(SET_SIZE, $event)"
         />
       </div>
     </div>
@@ -20,6 +20,8 @@
 <script>
 
   import SelectorItem from '@/common/input/SelectorItem.vue';
+  import {useStore} from 'vuex';
+  import {SET_SIZE} from '@/store/mutation-types';
 
   export default {
     name: 'BuilderSize',
@@ -29,6 +31,14 @@
         type: Array,
         required: true,
       },
+    },
+    setup() {
+      const store = useStore();
+
+      return {
+        store,
+        SET_SIZE,
+      };
     },
   };
 </script>

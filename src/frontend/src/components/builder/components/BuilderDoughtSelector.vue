@@ -11,7 +11,7 @@
           :key="dough.id"
           name="dough"
           :data="dough"
-          @itemSelected="$emit('doughSelected', $event)"
+          @itemSelected="store.commit(SET_DOUGH, $event)"
         />
       </div>
     </div>
@@ -20,6 +20,8 @@
 
 <script>
   import SelectorItem from '@/common/input/SelectorItem.vue';
+  import {useStore} from 'vuex';
+  import {SET_DOUGH} from '@/store/mutation-types';
 
   export default {
     name: 'BuilderDought',
@@ -29,6 +31,14 @@
         type: Array,
         required: true,
       },
+    },
+    setup() {
+      const store = useStore();
+
+      return {
+        store,
+        SET_DOUGH,
+      };
     },
   };
 </script>

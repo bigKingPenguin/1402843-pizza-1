@@ -10,7 +10,7 @@
       class="ingridients__input"
       name="sauce"
       :data="sauce"
-      @itemSelected="$emit('sauceSelected', $event)"
+      @itemSelected="store.commit(SET_SAUCE, $event)"
     />
   </div>
 </template>
@@ -18,6 +18,8 @@
 <script>
 
   import Radio from '@/common/input/Radio.vue';
+  import {useStore} from 'vuex';
+  import {SET_SAUCE} from '@/store/mutation-types';
 
   export default {
     name: 'BuilderIngredientsSauce',
@@ -27,6 +29,14 @@
         type: Array,
         required: true,
       },
+    },
+    setup() {
+      const store = useStore();
+
+      return {
+        store,
+        SET_SAUCE,
+      };
     },
   };
 </script>
