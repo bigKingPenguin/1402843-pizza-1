@@ -102,4 +102,29 @@
     background-color: $white;
     color: $green-500;
   }
+
+  &--cross {
+    position: absolute;
+    top: -7px;
+    right: 10px;
+
+    font-size: 16px;
+    background: none;
+    border: none;
+    color: $orange-200;
+
+    cursor: pointer;
+
+    &:hover {
+      color: $red-800;
+    }
+
+    &:active {
+      color: $red-800;
+    }
+
+    &:focus {
+      color: $red-800;
+    }
+  }
 }

@@ -3,7 +3,7 @@
     type="button"
     class="counter__button"
     :disabled="isDisabled"
-    :class="[`counter__button--${counterType}`, {'counter__button--disabled': isDisabled}]"
+    :class="[`counter__button--${counterType}`, counterButtonColor ? `counter__button--${counterButtonColor}` : '', {'counter__button--disabled': isDisabled}]"
     @click="$emit('onButtonClick')"
   >
     <span class="visually-hidden">{{ counterDescription }}</span>
@@ -25,6 +25,10 @@
       counterDescription: {
         type: String,
         required: true,
+      },
+      counterButtonColor: {
+        type: String,
+        default: null,
       },
     },
     emits: ['onButtonClick'],

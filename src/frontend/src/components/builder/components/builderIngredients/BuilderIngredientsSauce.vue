@@ -2,7 +2,6 @@
   <div class="ingridients__sauce">
     <p>Основной соус:</p>
 
-    <!--  TODO: указать дефолтные значения для v-model-->
     <!--    TODO: в pizza.json временно добавлен value для sauces-->
     <Radio
       v-for="sauce in pizzaSauce"
@@ -10,6 +9,7 @@
       class="ingridients__input"
       name="sauce"
       :data="sauce"
+      :isChecked="sauce.value === store.state.builder.selectedSauce.value"
       @itemSelected="store.commit(SET_SAUCE, $event)"
     />
   </div>
@@ -19,7 +19,7 @@
 
   import Radio from '@/common/input/Radio.vue';
   import {useStore} from 'vuex';
-  import {SET_SAUCE} from '@/store/mutation-types';
+  import {SET_SAUCE} from '@/store/modules/builder-mutation-types';
 
   export default {
     name: 'BuilderIngredientsSauce',

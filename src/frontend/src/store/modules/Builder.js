@@ -1,3 +1,11 @@
+const setupState = () => ({
+  selectedPizzaName: '',
+  selectedDough: {},
+  selectedSize: {},
+  selectedSauce: {},
+  selectedFilling: {},
+});
+
 export default {
   namespaced: true,
   state: () => ({
@@ -44,6 +52,16 @@ export default {
       } else {
         state.selectedFilling[payload.value] = payload;
       }
+    },
+    resetBuilder(state) {
+      Object.assign(state, setupState());
+    },
+    editSelectedPizza(state, payload) {
+      state.selectedPizzaName = payload.name;
+      state.selectedDough = payload.dough;
+      state.selectedSize = payload.size;
+      state.selectedSauce = payload.sauce;
+      state.selectedFilling = payload.filling;
     },
   },
   actions: {},

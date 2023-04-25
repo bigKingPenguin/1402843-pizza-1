@@ -1,17 +1,20 @@
 <template>
   <header class="header">
     <div class="header__logo">
-      <a href="index.html" class="logo">
+      <router-link
+        to="/"
+        class="logo"
+      >
         <img
           src="@/assets/img/logo.svg"
           alt="V!U!E! Pizza logo"
           width="90"
           height="40"
         />
-      </a>
+      </router-link>
     </div>
     <div class="header__cart">
-      <a href="cart.html">0 ₽</a>
+      <router-link to="/cart">{{ orderCost }} ₽</router-link>
     </div>
     <div class="header__user">
       <a href="#" class="header__login"><span>Войти</span></a>
@@ -20,8 +23,22 @@
 </template>
 
 <script>
+  import {useStore} from 'vuex';
+  import {computed} from 'vue';
+
   export default {
     name: 'Header',
+    setup() {
+      const store = useStore();
+
+      const orderCost = computed(() => {
+        return store.getters['cart/calculateFinalCost'];
+      });
+
+      return {
+        orderCost,
+      };
+    },
   };
 </script>
 

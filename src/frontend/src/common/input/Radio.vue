@@ -4,6 +4,7 @@
       type="radio"
       :name="name"
       :value="data.value"
+      :checked="isChecked"
       @change="$emit('itemSelected', data)"
     />
     <span>
@@ -22,6 +23,10 @@
       },
       name: {
         type: String,
+        required: true,
+      },
+      isChecked: {
+        type: Boolean,
         required: true,
       },
     },

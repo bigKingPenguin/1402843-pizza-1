@@ -6,7 +6,8 @@
 
 .cart-list__item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  position: relative;
 
   margin-bottom: 15px;
   padding-right: 15px;
