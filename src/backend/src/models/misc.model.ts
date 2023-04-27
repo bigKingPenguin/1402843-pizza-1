@@ -20,6 +20,12 @@ export class Misc extends Entity {
     type: 'string',
     required: true,
   })
+  value: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
   image: string;
 
   @property({

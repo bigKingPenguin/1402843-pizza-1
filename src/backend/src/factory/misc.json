@@ -1,16 +1,19 @@
 [
   {
     "name": "Cola-Cola 0,5 литра",
+    "value": "cola",
     "image": "/public/img/cola.svg",
     "price": 56
   },
   {
     "name": "Острый соус",
+    "value": "sauce",
     "image": "/public/img/sauce.svg",
     "price": 10
   },
   {
     "name": "Картошка из печи",
+    "value": "potato",
     "image": "/public/img/potato.svg",
     "price": 170
   }

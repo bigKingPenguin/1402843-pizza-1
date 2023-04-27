@@ -17,6 +17,12 @@ export class Sauce extends Entity {
   name: string;
 
   @property({
+    type: 'string',
+    required: true,
+  })
+  value: string;
+
+  @property({
     type: 'number',
     required: true,
   })
