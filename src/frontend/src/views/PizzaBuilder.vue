@@ -1,14 +1,14 @@
 <template>
   <div>
-    <form action="#" method="post">
+    <form v-if="isLoaded">
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
 
-        <BuilderDoughtSelector :pizzaDough="pizzaDough"/>
-        <BuilderSizeSelector :pizzaSizes="pizzaSizes"/>
+        <BuilderDoughtSelector :pizzaDough="pizzaData.dough"/>
+        <BuilderSizeSelector :pizzaSizes="pizzaData.sizes"/>
         <BuilderIngredientsSelector
-          :pizzaSauce="pizzaSauce"
-          :pizzaFilling="pizzaFilling"
+          :pizzaSauce="pizzaData.sauce"
+          :pizzaFilling="pizzaData.filling"
         />
 
         <div class="content__pizza">
@@ -61,26 +61,20 @@
     },
     setup() {
       const store = useStore();
+      const isLoaded = ref(false);
 
-      const pizzaDough = ref([]);
-      const pizzaSizes = ref([]);
-      const pizzaSauce = ref([]);
-      const pizzaFilling = ref([]);
+      const pizzaData = ref(null);
 
       const setDefaultConsist = () => {
-        store.commit(SET_DOUGH, pizzaDough.value.find((el) => el.value === 'light'));
-        store.commit(SET_SIZE, pizzaSizes.value.find((el) => el.value === 'normal'));
-        store.commit(SET_SAUCE, pizzaSauce.value.find((el) => el.value === 'tomato'));
+        store.commit(SET_DOUGH, pizzaData.value.dough.find((el) => el.value === 'light'));
+        store.commit(SET_SIZE, pizzaData.value.sizes.find((el) => el.value === 'normal'));
+        store.commit(SET_SAUCE, pizzaData.value.sauce.find((el) => el.value === 'tomato'));
       };
 
       onMounted(async () => {
-        const pizza = await getPizzaData();
-        pizzaDough.value = pizza.dough;
-        pizzaSizes.value = pizza.sizes;
-        pizzaSauce.value = pizza.sauce;
-        pizzaFilling.value = pizza.filling;
-
+        pizzaData.value = await getPizzaData();
         setDefaultConsist();
+        isLoaded.value = true;
       });
 
       const countPrice = computed(() => store.getters[COUNT_PRICE]);
@@ -103,10 +97,8 @@
 
       return {
         store,
-        pizzaDough,
-        pizzaSizes,
-        pizzaSauce,
-        pizzaFilling,
+        isLoaded,
+        pizzaData,
         SET_NAME,
         isReadyToCook: computed(() => store.getters[IS_READY_TO_COOK]),
         inputValue: computed(() => store.state.builder.selectedPizzaName),
