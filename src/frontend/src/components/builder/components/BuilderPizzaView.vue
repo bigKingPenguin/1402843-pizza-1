@@ -27,7 +27,7 @@
 
 <script>
   import {DATA_TRANSFER_TEXT_TYPE} from '@/common/const/constants';
-  import emitter from '@/services/emitter';
+  import emitter from '@/plugins/emitter';
   import {useStore} from 'vuex';
   import {computed} from 'vue';
 

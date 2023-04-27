@@ -23,7 +23,7 @@
   import {useStore} from 'vuex';
   import {computed, onBeforeUnmount, onMounted} from 'vue';
   import {DATA_TRANSFER_TEXT_TYPE, FILLING_MAXIMUM_COUNT} from '@/common/const/constants';
-  import emitter from '@/services/emitter';
+  import emitter from '@/plugins/emitter';
 
   export default {
     name: 'IngredientItem',
