@@ -55,9 +55,9 @@
 
 .additional-list__counter {
   width: 54px;
-  margin-right: auto;
 }
 
 .additional-list__price {
   @include b-s16-h19;
+  margin-left: auto;
 }

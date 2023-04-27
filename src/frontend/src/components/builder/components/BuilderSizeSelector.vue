@@ -3,13 +3,13 @@
     <div class="sheet">
       <h2 class="title title--small sheet__title">Выберите размер</h2>
       <div class="sheet__content diameter">
-        <!--                  TODO: указать дефолтные значения для v-model-->
         <!--      TODO: в pizza.json временно добавлен value для size-->
         <SelectorItem
           v-for="size in pizzaSizes"
           :key="size.id"
           name="diameter"
           :data="size"
+          :isChecked="size.value === store.state.builder.selectedSize.value"
           @itemSelected="store.commit(SET_SIZE, $event)"
         />
       </div>
@@ -21,7 +21,7 @@
 
   import SelectorItem from '@/common/input/SelectorItem.vue';
   import {useStore} from 'vuex';
-  import {SET_SIZE} from '@/store/mutation-types';
+  import {SET_SIZE} from '@/store/modules/builder-mutation-types';
 
   export default {
     name: 'BuilderSize',

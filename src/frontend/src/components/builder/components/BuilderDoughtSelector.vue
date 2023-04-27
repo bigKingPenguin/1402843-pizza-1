@@ -4,13 +4,13 @@
       <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
       <div class="sheet__content dough">
-        <!--                  TODO: указать дефолтные значения для v-model-->
         <!--      TODO: в pizza.json временно добавлен value для dough-->
         <SelectorItem
           v-for="dough in pizzaDough"
           :key="dough.id"
           name="dough"
           :data="dough"
+          :isChecked="dough.value === store.state.builder.selectedDough.value"
           @itemSelected="store.commit(SET_DOUGH, $event)"
         />
       </div>
@@ -21,7 +21,7 @@
 <script>
   import SelectorItem from '@/common/input/SelectorItem.vue';
   import {useStore} from 'vuex';
-  import {SET_DOUGH} from '@/store/mutation-types';
+  import {SET_DOUGH} from '@/store/modules/builder-mutation-types';
 
   export default {
     name: 'BuilderDought',

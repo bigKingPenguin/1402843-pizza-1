@@ -1,5 +1,8 @@
 <template>
-  <button type="button" class="button">
+  <button
+    type="button"
+    :class="buttonClass"
+  >
     {{ buttonText }}
   </button>
 </template>
@@ -9,6 +12,10 @@
     name: 'Button',
     props: {
       buttonText: {
+        type: String,
+        required: true,
+      },
+      buttonClass: {
         type: String,
         required: true,
       },

@@ -2,12 +2,6 @@
   "name": "html-academy-pizza-frontend",
   "version": "1.0.0",
   "private": true,
-  "description": "html academy pizza frontend",
-  "author": "Manu Ustenko",
-  "contributors": [
-    "Manu Ustenko",
-    "Sergii Shilingov"
-  ],
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -39,6 +33,7 @@
     "@vue/cli-plugin-unit-jest": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "@vue/compiler-sfc": "^3.2.19",
     "@vue/test-utils": "^2.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
@@ -47,8 +42,7 @@
     "lint-staged": "^12.2.0",
     "pretty-quick": "^3.1.0",
     "sass": "^1.37.0",
-    "sass-loader": "^12.3.0",
-    "@vue/compiler-sfc": "^3.2.19"
+    "sass-loader": "^12.3.0"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

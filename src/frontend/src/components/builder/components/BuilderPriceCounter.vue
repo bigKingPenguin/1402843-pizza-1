@@ -5,7 +5,7 @@
 <script>
   import {useStore} from 'vuex';
   import {computed} from 'vue';
-  import {COUNT_PRICE} from '@/store/getter-types';
+  import {COUNT_PRICE} from '@/store/modules/builder-getter-types';
 
   export default {
     name: 'BuilderPriceCounter',

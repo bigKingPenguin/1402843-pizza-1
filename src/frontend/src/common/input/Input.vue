@@ -8,14 +8,16 @@
     <input
       :name="inputName"
       type="text"
+      v-model="value"
       :placeholder="inputPlaceholder"
       :required="isRequired"
-      @input="$emit('onInput', $event.target.value)"
     />
   </label>
 </template>
 
 <script>
+  import {computed} from 'vue';
+
   export default {
     name: 'Input',
     props: {
@@ -39,6 +41,25 @@
         type: Boolean,
         default: false,
       },
+      inputValue: {
+        type: String,
+        required: true,
+      },
+    },
+    emits: ['update:onInput'],
+    setup(props, {emit}) {
+      const value = computed({
+        get() {
+          return props.inputValue;
+        },
+        set(value) {
+          emit('update:onInput', value);
+        },
+      });
+
+      return {
+        value,
+      };
     },
   };
 </script>

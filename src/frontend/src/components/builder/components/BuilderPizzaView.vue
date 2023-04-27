@@ -40,7 +40,7 @@
       const selectedSauce = computed(() => store.state.builder.selectedSauce);
       const selectedFilling = computed(() => store.state.builder.selectedFilling);
 
-      const getFoundationClass = computed(() => `pizza--foundation--${selectedDough.value?.value ?? 'light'}-${selectedSauce.value?.value ?? 'tomato'}`);
+      const getFoundationClass = computed(() => `pizza--foundation--${selectedDough.value?.value}-${selectedSauce.value?.value}`);
 
       const getFillingClass = computed(() => {
         let classNames = [];
