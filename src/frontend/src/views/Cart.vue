@@ -18,6 +18,7 @@
             <AssembledPizza/>
 
             <AdditionalProducts
+              v-if="additionalProducts"
               :additionalProducts="additionalProducts"
             />
 
