@@ -17,7 +17,9 @@
           <template v-else>
             <AssembledPizza/>
 
-            <AdditionalProducts/>
+            <AdditionalProducts
+              :additionalProducts="additionalProducts"
+            />
 
             <DeliveryInformation/>
           </template>
@@ -54,13 +56,20 @@
   import AdditionalProducts from '@/components/cart/components/AdditionalProducts.vue';
   import DeliveryInformation from '@/components/cart/components/DeliveryInformation.vue';
   import {useStore} from 'vuex';
-  import {computed} from 'vue';
+  import {computed, onMounted, ref} from 'vue';
+  import {getAdditionalProducts} from '@/services/cart.service';
 
   export default {
     name: 'Cart',
     components: {DeliveryInformation, AdditionalProducts, AssembledPizza},
     setup() {
       const store = useStore();
+      const additionalProducts = ref(null);
+
+      onMounted(async () => {
+        additionalProducts.value = await getAdditionalProducts();
+        return additionalProducts;
+      });
 
       const orderCost = computed(() => {
         return store.getters['cart/calculateFinalCost'];
@@ -68,6 +77,7 @@
 
       return {
         store,
+        additionalProducts,
         orderCost,
       };
     },

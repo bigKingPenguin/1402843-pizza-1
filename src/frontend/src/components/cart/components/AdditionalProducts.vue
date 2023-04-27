@@ -6,7 +6,7 @@
     >
       <li
         class="additional-list__item sheet"
-        v-for="add in additional"
+        v-for="add in additionalProducts"
         :key="add.id"
       >
         <AdditionalItem :itemData="add"/>
@@ -17,13 +17,19 @@
 
 <script>
   import AdditionalItem from '@/components/cart/components/additionalProducts/AdditionalItem.vue';
-  import additional from '@/static/misc.json';
   import {useStore} from 'vuex';
   import {computed} from 'vue';
 
   export default {
     name: 'AdditionalProducts',
     components: {AdditionalItem},
+    props: {
+      additionalProducts: {
+        type: Array,
+        required: true,
+        default: () => [],
+      },
+    },
     setup() {
       const store = useStore();
 
@@ -31,7 +37,6 @@
 
       return {
         selectedPizza,
-        additional,
       };
     },
   };

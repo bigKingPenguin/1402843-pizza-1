@@ -40,7 +40,6 @@
 </template>
 
 <script>
-  import pizza from '@/static/pizza.json';
   import BuilderDoughtSelector from '@/components/builder/components/BuilderDoughtSelector.vue';
   import BuilderSizeSelector from '@/components/builder/components/BuilderSizeSelector.vue';
   import BuilderIngredientsSelector from '@/components/builder/components/BuilderIngredientsSelector.vue';
@@ -52,6 +51,7 @@
   import {useStore} from 'vuex';
   import {SET_DOUGH, SET_NAME, SET_SAUCE, SET_SIZE} from '@/store/modules/builder-mutation-types';
   import {COUNT_PRICE, IS_READY_TO_COOK} from '@/store/modules/builder-getter-types';
+  import {getPizzaData} from '@/services/pizzaBuilder.service';
 
   export default {
     name: 'PizzaBuilder',
@@ -62,10 +62,10 @@
     setup() {
       const store = useStore();
 
-      const pizzaDough = ref(pizza.dough);
-      const pizzaSizes = ref(pizza.sizes);
-      const pizzaSauce = ref(pizza.sauces);
-      const pizzaFilling = ref(pizza.ingredients);
+      const pizzaDough = ref([]);
+      const pizzaSizes = ref([]);
+      const pizzaSauce = ref([]);
+      const pizzaFilling = ref([]);
 
       const setDefaultConsist = () => {
         store.commit(SET_DOUGH, pizzaDough.value.find((el) => el.value === 'light'));
@@ -73,7 +73,15 @@
         store.commit(SET_SAUCE, pizzaSauce.value.find((el) => el.value === 'tomato'));
       };
 
-      onMounted(() => setDefaultConsist());
+      onMounted(async () => {
+        const pizza = await getPizzaData();
+        pizzaDough.value = pizza.dough;
+        pizzaSizes.value = pizza.sizes;
+        pizzaSauce.value = pizza.sauce;
+        pizzaFilling.value = pizza.filling;
+
+        setDefaultConsist();
+      });
 
       const countPrice = computed(() => store.getters[COUNT_PRICE]);
 
