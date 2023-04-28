@@ -19,11 +19,11 @@
 
 <script>
   import ItemCounter from '@/common/input/ItemCounter.vue';
-  import {ADD_FILLING} from '@/store/modules/builder-mutation-types';
   import {useStore} from 'vuex';
   import {computed, onBeforeUnmount, onMounted} from 'vue';
   import {DATA_TRANSFER_TEXT_TYPE, FILLING_MAXIMUM_COUNT} from '@/common/const/constants';
   import emitter from '@/plugins/emitter';
+  import {removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
     name: 'IngredientItem',
@@ -40,7 +40,10 @@
       const counter = computed(() => store.state.builder.selectedFilling[props.ingredient.value]?.counter ?? 0);
 
       const onCounterChange = (event) => {
-        store.commit(ADD_FILLING, {...props.ingredient, counter: event});
+        store.commit('builder/addFilling', {...props.ingredient, counter: event});
+        if (event === 0) {
+          removeStorageData(props.ingredient.value);
+        } else saveDataInStorage(props.ingredient.value, event);
       };
 
       const isDraggable = computed(() => counter.value !== FILLING_MAXIMUM_COUNT);
@@ -64,7 +67,6 @@
         isDraggable,
         onDrag,
         FILLING_MAXIMUM_COUNT,
-        ADD_FILLING,
       };
     },
   };

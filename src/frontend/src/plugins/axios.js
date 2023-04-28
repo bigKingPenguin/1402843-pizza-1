@@ -1,12 +1,13 @@
 import axios from 'axios';
-import {getToken} from '@/plugins/jwt.service';
+import {getStorageData} from '@/plugins/localStorage.service';
+import {TOKEN} from '@/common/const/constants';
 
 const api = axios.create({
   baseURL: 'http://127.0.0.1:3000/',
 });
 
 api.interceptors.request.use((config) => {
-  const token = getToken();
+  const token = getStorageData(TOKEN);
   const authHeader = token ? `Bearer ${token}` : '';
   const copyConfig = {...config};
   if (copyConfig.headers) {

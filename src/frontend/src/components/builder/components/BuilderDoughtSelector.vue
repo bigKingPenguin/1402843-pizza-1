@@ -11,7 +11,7 @@
           name="dough"
           :data="dough"
           :isChecked="dough.value === store.state.builder.selectedDough.value"
-          @itemSelected="store.commit(SET_DOUGH, $event)"
+          @itemSelected="saveSelectedDough"
         />
       </div>
     </div>
@@ -21,7 +21,8 @@
 <script>
   import SelectorItem from '@/common/input/SelectorItem.vue';
   import {useStore} from 'vuex';
-  import {SET_DOUGH} from '@/store/modules/builder-mutation-types';
+  import {DOUGH} from '@/common/const/constants';
+  import {saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
     name: 'BuilderDought',
@@ -35,9 +36,14 @@
     setup() {
       const store = useStore();
 
+      const saveSelectedDough = (event) => {
+        store.commit('builder/setPizzaDough', event);
+        saveDataInStorage(DOUGH, event.value);
+      };
+
       return {
         store,
-        SET_DOUGH,
+        saveSelectedDough,
       };
     },
   };

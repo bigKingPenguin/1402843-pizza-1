@@ -10,7 +10,7 @@
       name="sauce"
       :data="sauce"
       :isChecked="sauce.value === store.state.builder.selectedSauce.value"
-      @itemSelected="store.commit(SET_SAUCE, $event)"
+      @itemSelected="saveSelectedSauce"
     />
   </div>
 </template>
@@ -19,7 +19,8 @@
 
   import Radio from '@/common/input/Radio.vue';
   import {useStore} from 'vuex';
-  import {SET_SAUCE} from '@/store/modules/builder-mutation-types';
+  import {saveDataInStorage} from '@/plugins/localStorage.service';
+  import {SAUCE} from '@/common/const/constants';
 
   export default {
     name: 'BuilderIngredientsSauce',
@@ -33,9 +34,14 @@
     setup() {
       const store = useStore();
 
+      const saveSelectedSauce = (event) => {
+        store.commit('builder/setPizzaSauce', event);
+        saveDataInStorage(SAUCE, event.value);
+      };
+
       return {
         store,
-        SET_SAUCE,
+        saveSelectedSauce,
       };
     },
   };

@@ -10,7 +10,7 @@
           name="diameter"
           :data="size"
           :isChecked="size.value === store.state.builder.selectedSize.value"
-          @itemSelected="store.commit(SET_SIZE, $event)"
+          @itemSelected="saveSelectedSize"
         />
       </div>
     </div>
@@ -21,7 +21,8 @@
 
   import SelectorItem from '@/common/input/SelectorItem.vue';
   import {useStore} from 'vuex';
-  import {SET_SIZE} from '@/store/modules/builder-mutation-types';
+  import {saveDataInStorage} from '@/plugins/localStorage.service';
+  import {SIZE} from '@/common/const/constants';
 
   export default {
     name: 'BuilderSize',
@@ -35,9 +36,14 @@
     setup() {
       const store = useStore();
 
+      const saveSelectedSize = (event) => {
+        store.commit('builder/setPizzaSize', event);
+        saveDataInStorage(SIZE, event.value);
+      };
+
       return {
         store,
-        SET_SIZE,
+        saveSelectedSize,
       };
     },
   };

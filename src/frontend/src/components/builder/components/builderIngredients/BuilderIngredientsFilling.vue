@@ -13,7 +13,6 @@
 
 <script>
   import {useStore} from 'vuex';
-  import {ADD_FILLING} from '@/store/modules/builder-mutation-types';
   import IngredientItem from '@/components/builder/components/builderIngredients/IngredientItem.vue';
 
   export default {
@@ -30,7 +29,6 @@
 
       return {
         store,
-        ADD_FILLING,
       };
     },
   };

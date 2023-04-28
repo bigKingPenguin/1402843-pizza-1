@@ -52,18 +52,61 @@
   }
 }
 
+.header__login {
+  padding-top: 15px;
+  padding-right: 15px;
+  padding-bottom: 14px;
+  padding-left: 15px;
+
+  &::after {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    content: "";
+    vertical-align: middle;
+    background: url("~@/assets/img/login.svg") no-repeat center;
+    background-size: auto 50%;
+  }
+}
+
+.header__logout {
+  padding-top: 15px;
+  padding-right: 15px;
+  padding-bottom: 14px;
+  padding-left: 15px;
+
+  &::before {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    content: "";
+    vertical-align: middle;
+    background: url("~@/assets/img/logout.svg") no-repeat center;
+    background-size: auto 50%;
+  }
+}
+
 .header__user {
+  display: flex;
+  align-items: center;
+
   a {
     display: block;
 
-    padding-top: 14px;
-    padding-right: 20px;
+    padding-top: 15px;
+    padding-right: 15px;
     padding-bottom: 14px;
-    padding-left: 20px;
+    padding-left: 15px;
 
     transition: 0.3s;
 
+    color: $white;
     background-color: $green-500;
+    background-repeat: no-repeat;
+    background-position: 70px center;
+    background-size: 24px 22px;
 
     &:hover:not(:active) {
       background-color: $green-400;

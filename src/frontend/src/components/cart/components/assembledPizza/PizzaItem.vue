@@ -33,7 +33,7 @@
     buttonText="x"
     buttonClass="button--cross"
     aria-label="Удалить"
-    @click="store.commit('cart/removePizza', pizzaData.name)"
+    @click="removePizza"
   />
 
   <Button
@@ -51,6 +51,7 @@
   import {computed, ref} from 'vue';
   import Button from '@/common/button/Button.vue';
   import {useRouter} from 'vue-router';
+  import {saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
     name: 'PizzaItem',
@@ -85,6 +86,11 @@
         pizzaCost.value = pizzaPrice.value * counter.value;
       };
 
+      const removePizza = () => {
+        store.commit('cart/removePizza', props.pizzaData.name);
+        saveDataInStorage('pizza', JSON.stringify(store.state.cart.selectedPizzas));
+      };
+
       const editSelectedPizza = () => {
         router.push('/');
         store.commit('builder/editSelectedPizza', {
@@ -105,6 +111,7 @@
         CART_PIZZA_MINIMUM_COUNT,
         getFillingList,
         onCounterChange,
+        removePizza,
         editSelectedPizza,
       };
     },
