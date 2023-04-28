@@ -5,13 +5,6 @@ const routes = [
     path: '/',
     name: 'main',
     component: () => import('../views/PizzaBuilder.vue'),
-    children: [
-      {
-        path: '/login',
-        name: 'login',
-        component: () => import('../components/modals/Login.vue'),
-      },
-    ],
   },
   {
     path: '/cart',

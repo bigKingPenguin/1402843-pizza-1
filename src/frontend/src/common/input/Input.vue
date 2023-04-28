@@ -7,7 +7,8 @@
     </span>
     <input
       :name="inputName"
-      type="text"
+      :type="inputType"
+      :autocomplete="autocomplete"
       v-model="value"
       :placeholder="inputPlaceholder"
       :required="isRequired"
@@ -43,7 +44,15 @@
       },
       inputValue: {
         type: String,
+        default: '',
+      },
+      inputType: {
+        type: String,
         required: true,
+      },
+      autocomplete: {
+        type: String,
+        default: '',
       },
     },
     emits: ['update:onInput'],

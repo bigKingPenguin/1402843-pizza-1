@@ -13,13 +13,14 @@
 
         <div class="content__pizza">
           <Input
+            inputType="text"
             inputLabel="Название пиццы"
             :inputValue="inputValue"
             isHiddenLabel
             inputName="pizza_name"
             inputPlaceholder="Введите название пиццы"
             isRequired
-            @update:onInput="store.commit(SET_NAME, $event)"
+            @update:onInput="savePizzaName"
           />
           <BuilderPizzaView/>
 
@@ -49,9 +50,10 @@
   import BuilderPriceCounter from '@/components/builder/components/BuilderPriceCounter.vue';
   import {computed, onMounted, ref} from 'vue';
   import {useStore} from 'vuex';
-  import {SET_DOUGH, SET_NAME, SET_SAUCE, SET_SIZE} from '@/store/modules/builder-mutation-types';
   import {COUNT_PRICE, IS_READY_TO_COOK} from '@/store/modules/builder-getter-types';
   import {getPizzaData} from '@/services/pizzaBuilder.service';
+  import {DOUGH, NAME, SAUCE, SIZE} from '@/common/const/constants';
+  import {getStorageData, removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
     name: 'PizzaBuilder',
@@ -66,9 +68,22 @@
       const pizzaData = ref(null);
 
       const setDefaultConsist = () => {
-        store.commit(SET_DOUGH, pizzaData.value.dough.find((el) => el.value === 'light'));
-        store.commit(SET_SIZE, pizzaData.value.sizes.find((el) => el.value === 'normal'));
-        store.commit(SET_SAUCE, pizzaData.value.sauce.find((el) => el.value === 'tomato'));
+        store.commit('builder/setPizzaName', getStorageData(NAME));
+        store.commit('builder/setPizzaDough', pizzaData.value.dough.find((el) => el.value === (getStorageData(DOUGH) || 'light')));
+        store.commit('builder/setPizzaSize', pizzaData.value.sizes.find((el) => el.value === (getStorageData(SIZE) || 'normal')));
+        store.commit('builder/setPizzaSauce', pizzaData.value.sauce.find((el) => el.value === (getStorageData(SAUCE) || 'tomato')));
+        setDefaultIngredients();
+      };
+
+      const setDefaultIngredients = () => {
+        for (let fil in pizzaData.value.filling) {
+          if (getStorageData(pizzaData.value.filling[fil].value)) {
+            store.commit('builder/addFilling', {
+              ...pizzaData.value.filling[fil],
+              counter: getStorageData(pizzaData.value.filling[fil].value),
+            });
+          }
+        }
       };
 
       onMounted(async () => {
@@ -76,6 +91,12 @@
         setDefaultConsist();
         isLoaded.value = true;
       });
+
+      const savePizzaName = (event) => {
+        store.commit('builder/setPizzaName', event);
+        saveDataInStorage(NAME, event);
+        if (event === '') removeStorageData(NAME);
+      };
 
       const countPrice = computed(() => store.getters[COUNT_PRICE]);
 
@@ -91,6 +112,16 @@
           price: countPrice.value,
           quantity: 1,
         });
+        saveDataInStorage('pizza', JSON.stringify(store.state.cart.selectedPizzas));
+        removeStorageData(NAME);
+        removeStorageData(DOUGH);
+        removeStorageData(SIZE);
+        removeStorageData(SAUCE);
+        for (let fil in store.state.builder.selectedFilling) {
+          if (getStorageData(store.state.builder.selectedFilling[fil].value)) {
+            removeStorageData(store.state.builder.selectedFilling[fil].value);
+          }
+        }
         store.commit('builder/resetBuilder');
         setDefaultConsist();
       };
@@ -99,9 +130,9 @@
         store,
         isLoaded,
         pizzaData,
-        SET_NAME,
         isReadyToCook: computed(() => store.getters[IS_READY_TO_COOK]),
         inputValue: computed(() => store.state.builder.selectedPizzaName),
+        savePizzaName,
         countPrice,
         addToCart,
       };
