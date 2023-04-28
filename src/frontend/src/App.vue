@@ -16,7 +16,7 @@
   import appLayout from '@/layouts/AppLayout.vue';
   import {getStorageData} from '@/plugins/localStorage.service';
   import {getUserData} from '@/services/user.service';
-  import {TOKEN} from '@/common/const/constants';
+  import {PIZZA, TOKEN} from '@/common/const/constants';
   import {useStore} from 'vuex';
 
   export default {
@@ -34,7 +34,7 @@
       });
 
       onMounted(() => {
-        store.commit('cart/addPizzasFromStorage', JSON.parse(getStorageData('pizza')));
+        store.commit('cart/addPizzasFromStorage', JSON.parse(getStorageData(PIZZA)));
       });
 
       return {

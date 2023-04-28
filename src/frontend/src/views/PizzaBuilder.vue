@@ -52,7 +52,7 @@
   import {useStore} from 'vuex';
   import {COUNT_PRICE, IS_READY_TO_COOK} from '@/store/modules/builder-getter-types';
   import {getPizzaData} from '@/services/pizzaBuilder.service';
-  import {DOUGH, NAME, SAUCE, SIZE} from '@/common/const/constants';
+  import {DEFAULT_DOUGH, DEFAULT_SAUCE, DEFAULT_SIZE, DOUGH, NAME, PIZZA, SAUCE, SIZE} from '@/common/const/constants';
   import {getStorageData, removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
@@ -69,9 +69,9 @@
 
       const setDefaultConsist = () => {
         store.commit('builder/setPizzaName', getStorageData(NAME));
-        store.commit('builder/setPizzaDough', pizzaData.value.dough.find((el) => el.value === (getStorageData(DOUGH) || 'light')));
-        store.commit('builder/setPizzaSize', pizzaData.value.sizes.find((el) => el.value === (getStorageData(SIZE) || 'normal')));
-        store.commit('builder/setPizzaSauce', pizzaData.value.sauce.find((el) => el.value === (getStorageData(SAUCE) || 'tomato')));
+        store.commit('builder/setPizzaDough', pizzaData.value.dough.find((el) => el.value === (getStorageData(DOUGH) || DEFAULT_DOUGH)));
+        store.commit('builder/setPizzaSize', pizzaData.value.sizes.find((el) => el.value === (getStorageData(SIZE) || DEFAULT_SIZE)));
+        store.commit('builder/setPizzaSauce', pizzaData.value.sauce.find((el) => el.value === (getStorageData(SAUCE) || DEFAULT_SAUCE)));
         setDefaultIngredients();
       };
 
@@ -112,7 +112,7 @@
           price: countPrice.value,
           quantity: 1,
         });
-        saveDataInStorage('pizza', JSON.stringify(store.state.cart.selectedPizzas));
+        saveDataInStorage(PIZZA, JSON.stringify(store.state.cart.selectedPizzas));
         removeStorageData(NAME);
         removeStorageData(DOUGH);
         removeStorageData(SIZE);
