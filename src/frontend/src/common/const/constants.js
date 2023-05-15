@@ -21,3 +21,9 @@ export const CART_PIZZA_MINIMUM_COUNT = 1;
 export const DEFAULT_DOUGH = 'light';
 export const DEFAULT_SIZE = 'normal';
 export const DEFAULT_SAUCE = 'tomato';
+
+// DELIVERY METHODS
+
+export const DELIVERY_HIMSELF = 'himself';
+export const DELIVERY_NEW_ADDRESS = 'newAddress';
+export const DELIVERY_HOME = 'home';

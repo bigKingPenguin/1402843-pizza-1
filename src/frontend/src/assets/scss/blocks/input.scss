@@ -32,6 +32,11 @@
     &:focus {
       border-color: $green-500;
     }
+
+    &:read-only {
+      border: 1px solid $purple-400;
+      background-color: $silver-200;
+    }
   }
 
   &:hover {

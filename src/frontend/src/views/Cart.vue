@@ -1,55 +1,37 @@
 <template>
-  <div>
-    <form class="layout-form">
-      <main class="content cart">
-        <div class="container">
-          <div class="cart__title">
-            <h1 class="title title--big">Корзина</h1>
-          </div>
+  <form class="layout-form">
+    <main class="content cart">
+      <div class="container">
+        <div class="cart__title">
+          <h1 class="title title--big">Корзина</h1>
+        </div>
 
-          <div
-            class="sheet cart__empty"
-            v-if="!Object.keys(store.state.cart.selectedPizzas).length"
-          >
-            <p>В корзине нет ни одного товара</p>
-          </div>
+        <div
+          class="sheet cart__empty"
+          v-if="!Object.keys(store.state.cart.selectedPizzas).length"
+        >
+          <p>В корзине нет ни одного товара</p>
+        </div>
 
-          <template v-else>
-            <AssembledPizza/>
+        <template v-else>
+          <AssembledPizza/>
 
+          <template v-if="isLoaded">
             <AdditionalProducts
-              v-if="additionalProducts"
               :additionalProducts="additionalProducts"
             />
 
-            <DeliveryInformation/>
+            <DeliveryInformation
+              :userAddress="currentAddress"
+            />
           </template>
-
-        </div>
-      </main>
-      <template v-if="Object.keys(store.state.cart.selectedPizzas).length">
-        <section class="footer">
-          <div class="footer__more">
-            <router-link
-              to="/"
-              class="button button--border button--arrow"
-            >
-              Хочу еще одну
-            </router-link>
-          </div>
-          <p class="footer__text">Перейти к конструктору<br>чтоб собрать ещё одну пиццу</p>
-          <div class="footer__price">
-            <b>Итого: {{ orderCost }} ₽</b>
-          </div>
-
-          <div class="footer__submit">
-            <button type="submit" class="button">Оформить заказ</button>
-          </div>
-        </section>
-      </template>
-    </form>
-  </div>
-
+        </template>
+      </div>
+    </main>
+  </form>
+  <CartFooter
+    :orderCost="orderCost"
+  />
 </template>
 
 <script>
@@ -57,19 +39,43 @@
   import AdditionalProducts from '@/components/cart/components/AdditionalProducts.vue';
   import DeliveryInformation from '@/components/cart/components/DeliveryInformation.vue';
   import {useStore} from 'vuex';
-  import {computed, onMounted, ref} from 'vue';
-  import {getAdditionalProducts} from '@/services/cart.service';
+  import {computed, onMounted, ref, watch} from 'vue';
+  import {getAdditionalProducts, getUserAddress} from '@/services/cart.service';
+  import CartFooter from '@/components/cart/components/CartFooter.vue';
+  import {getStorageData} from '@/plugins/localStorage.service';
 
   export default {
     name: 'Cart',
-    components: {DeliveryInformation, AdditionalProducts, AssembledPizza},
+    components: {CartFooter, DeliveryInformation, AdditionalProducts, AssembledPizza},
     setup() {
       const store = useStore();
       const additionalProducts = ref(null);
+      const currentAddress = ref([]);
+      const isLoaded = ref(false);
 
       onMounted(async () => {
         additionalProducts.value = await getAdditionalProducts();
-        return additionalProducts;
+        if (store.state.user.user) {
+          currentAddress.value = await getUserAddress();
+        }
+        isLoaded.value = true;
+        for (let product in additionalProducts.value) {
+          if (getStorageData(additionalProducts.value[product].value)) {
+            store.commit('cart/addAdditionalProduct', {
+              ...additionalProducts.value[product],
+              quantity: getStorageData(additionalProducts.value[product].value),
+            });
+          }
+        }
+        if (store.state.user.user) {
+          store.commit('cart/getPhoneNumber', store.state.user.user.phone);
+        }
+      });
+
+      watch(() => store.state.user.user, async (user) => {
+        if (user && isLoaded.value) {
+          currentAddress.value = await getUserAddress();
+        }
       });
 
       const orderCost = computed(() => {
@@ -78,8 +84,10 @@
 
       return {
         store,
+        isLoaded,
         additionalProducts,
         orderCost,
+        currentAddress,
       };
     },
   };

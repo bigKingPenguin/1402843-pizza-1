@@ -1,11 +1,7 @@
 <template>
-  <div>
-    <component
-      :is="layout"
-    >
-      <router-view/>
-    </component>
-  </div>
+  <component :is="layout">
+    <router-view/>
+  </component>
 </template>
 
 <script>
@@ -34,7 +30,10 @@
       });
 
       onMounted(() => {
-        store.commit('cart/addPizzasFromStorage', JSON.parse(getStorageData(PIZZA)));
+        const pizza = getStorageData(PIZZA);
+        if (pizza) {
+          store.commit('cart/addPizzasFromStorage', JSON.parse(pizza));
+        }
       });
 
       return {

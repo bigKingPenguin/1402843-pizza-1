@@ -7,6 +7,7 @@
       :alt="itemData.name"
     >
     <span>{{ itemData.name }}</span>
+    <span> {{itemData.price}} ₽</span>
   </p>
 
   <div class="additional-list__wrapper">
@@ -28,6 +29,7 @@
   import ItemCounter from '@/common/input/ItemCounter.vue';
   import {computed, ref} from 'vue';
   import {useStore} from 'vuex';
+  import {removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
     name: 'AdditionalItem',
@@ -44,14 +46,20 @@
       const counter = computed(() => store.state.cart.additionalProducts[props.itemData.value]?.quantity ?? 0);
 
       const itemPrice = ref(props.itemData.price);
-      const itemCost = ref(0);
+      const itemCost = computed(() => {
+        return itemPrice.value * (store.state.cart.additionalProducts[props.itemData.value]?.quantity ?? 0)
+      });
 
       const onCounterChange = (event) => {
         store.commit('cart/addAdditionalProduct', {
           ...props.itemData,
           quantity: event,
         });
-        itemCost.value = itemPrice.value * counter.value;
+        if (counter.value > 0 ) {
+          saveDataInStorage(props.itemData.value, counter.value);
+        } else {
+          removeStorageData(props.itemData.value)
+        }
       };
 
       return {

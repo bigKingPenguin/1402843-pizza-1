@@ -16,7 +16,7 @@
 <script>
   import {useStore} from 'vuex';
   import {computed} from 'vue';
-  import {DOUGH_DESCRIPTION} from '@/common/const/pizza-description-dictionary';
+  import {DOUGH_DESCRIPTION} from '@/common/const/dictionary';
   import PizzaItem from '@/components/cart/components/assembledPizza/PizzaItem.vue';
 
   export default {

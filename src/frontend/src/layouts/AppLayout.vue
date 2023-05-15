@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <Header></Header>
-    <main class="content">
-      <slot/>
-    </main>
-  </div>
+  <Header></Header>
+  <main class="content">
+    <slot/>
+  </main>
 </template>
 
 <script>

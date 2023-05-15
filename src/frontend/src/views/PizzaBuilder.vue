@@ -30,7 +30,7 @@
               :class="{'button--disabled': !isReadyToCook}"
               :disabled="!isReadyToCook"
               buttonClass="button"
-              buttonText="Готовьте!"
+              :buttonText="isEdit ? 'Сохранить' : 'Добавить в корзину'"
               @click="addToCart"
             />
           </div>
@@ -67,6 +67,8 @@
 
       const pizzaData = ref(null);
 
+      const isEdit = computed(() => store.state.builder.isEdit);
+
       const setDefaultConsist = () => {
         store.commit('builder/setPizzaName', getStorageData(NAME));
         store.commit('builder/setPizzaDough', pizzaData.value.dough.find((el) => el.value === (getStorageData(DOUGH) || DEFAULT_DOUGH)));
@@ -88,7 +90,9 @@
 
       onMounted(async () => {
         pizzaData.value = await getPizzaData();
-        setDefaultConsist();
+        if (!isEdit.value) {
+          setDefaultConsist();
+        }
         isLoaded.value = true;
       });
 
@@ -101,6 +105,10 @@
       const countPrice = computed(() => store.getters[COUNT_PRICE]);
 
       const addToCart = () => {
+        if (isEdit.value) {
+          store.commit('cart/removePizza', store.state.builder.editedPizzaName);
+          store.commit('builder/toggleEditState');
+        }
         store.commit('cart/addPizza', {
           name: store.state.builder.selectedPizzaName,
           consist: {
@@ -132,6 +140,7 @@
         pizzaData,
         isReadyToCook: computed(() => store.getters[IS_READY_TO_COOK]),
         inputValue: computed(() => store.state.builder.selectedPizzaName),
+        isEdit,
         savePizzaName,
         countPrice,
         addToCart,
