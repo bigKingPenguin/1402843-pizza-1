@@ -1,15 +1,15 @@
 <template>
-  <label :class="`${props.selectType}__select`">
-    <span :class="`${props.selectType}__label`">
-      {{ props.selectLabel }}
+  <label :class="`${selectType}__select`">
+    <span :class="`${selectType}__label`">
+      {{ selectLabel }}
     </span>
     <select
-      :name="props.selectName"
+      :name="selectName"
       class="select"
       v-model="selected"
     >
       <option
-        v-for="option in props.selectOptions"
+        v-for="option in selectOptions"
         :key="option.value"
         :value="option.value"
       >

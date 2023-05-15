@@ -11,6 +11,11 @@
           v-if="!Object.keys(store.state.cart.selectedPizzas).length"
         >
           <p>В корзине нет ни одного товара</p>
+          <Button
+            buttonText="Создать пиццу"
+            buttonClass="button button--green"
+            @click="router.push('/')"
+          />
         </div>
 
         <template v-else>
@@ -30,6 +35,7 @@
     </main>
   </form>
   <CartFooter
+    v-if="Object.keys(store.state.cart.selectedPizzas).length"
     :orderCost="orderCost"
   />
 </template>
@@ -43,36 +49,42 @@
   import {getAdditionalProducts, getUserAddress} from '@/services/cart.service';
   import CartFooter from '@/components/cart/components/CartFooter.vue';
   import {getStorageData} from '@/plugins/localStorage.service';
+  import Button from '@/common/button/Button.vue';
+  import {useRouter} from 'vue-router';
 
   export default {
     name: 'Cart',
-    components: {CartFooter, DeliveryInformation, AdditionalProducts, AssembledPizza},
+    components: {Button, CartFooter, DeliveryInformation, AdditionalProducts, AssembledPizza},
     setup() {
       const store = useStore();
+      const router = useRouter();
+
       const additionalProducts = ref(null);
       const currentAddress = ref([]);
       const isLoaded = ref(false);
 
+      const user = computed(() => store.state.user.user);
+
       onMounted(async () => {
         additionalProducts.value = await getAdditionalProducts();
-        if (store.state.user.user) {
+        if (user.value) {
           currentAddress.value = await getUserAddress();
         }
         isLoaded.value = true;
         for (let product in additionalProducts.value) {
-          if (getStorageData(additionalProducts.value[product].value)) {
+          if (getStorageData(`additional_${additionalProducts.value[product].value}`)) {
             store.commit('cart/addAdditionalProduct', {
               ...additionalProducts.value[product],
-              quantity: getStorageData(additionalProducts.value[product].value),
+              quantity: +getStorageData(`additional_${additionalProducts.value[product].value}`),
             });
           }
         }
-        if (store.state.user.user) {
-          store.commit('cart/getPhoneNumber', store.state.user.user.phone);
+        if (user.value) {
+          store.commit('cart/getPhoneNumber', user.value.phone);
         }
       });
 
-      watch(() => store.state.user.user, async (user) => {
+      watch(() => user.value, async (user) => {
         if (user && isLoaded.value) {
           currentAddress.value = await getUserAddress();
         }
@@ -88,6 +100,7 @@
         additionalProducts,
         orderCost,
         currentAddress,
+        router,
       };
     },
   };

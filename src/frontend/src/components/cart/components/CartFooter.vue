@@ -1,30 +1,28 @@
 <template>
-  <template v-if="Object.keys(store.state.cart.selectedPizzas).length">
-    <section class="footer">
-      <div class="footer__more">
-        <router-link
-          to="/"
-          class="button button--border button--arrow"
-        >
-          Хочу еще одну
-        </router-link>
-      </div>
-      <p class="footer__text">Перейти к конструктору<br>чтоб собрать ещё одну пиццу</p>
-      <div class="footer__price">
-        <b>Итого: {{ orderCost }} ₽</b>
-      </div>
+  <section class="footer">
+    <div class="footer__more">
+      <router-link
+        to="/"
+        class="button button--border button--arrow"
+      >
+        Хочу еще одну
+      </router-link>
+    </div>
+    <p class="footer__text">Перейти к конструктору<br>чтоб собрать ещё одну пиццу</p>
+    <div class="footer__price">
+      <b>Итого: {{ orderCost }} ₽</b>
+    </div>
 
-      <div class="footer__submit">
-        <Button
-          :class="{'button--disabled': !store.getters['cart/isReadyToOrder']}"
-          buttonType="submit"
-          buttonClass="button"
-          buttonText="Оформить заказ"
-          @click="onOrderSubmit"
-        />
-      </div>
-    </section>
-  </template>
+    <div class="footer__submit">
+      <Button
+        :class="{'button--disabled': !store.getters['cart/isReadyToOrder']}"
+        buttonType="submit"
+        buttonClass="button"
+        buttonText="Оформить заказ"
+        @click="onOrderSubmit"
+      />
+    </div>
+  </section>
 </template>
 
 <script>
@@ -32,6 +30,7 @@
   import Button from '@/common/button/Button.vue';
   import {submitOrder} from '@/services/cart.service';
   import {DELIVERY_HIMSELF} from '@/common/const/constants';
+  import {computed} from 'vue';
 
   export default {
     name: 'CartFooter',
@@ -45,25 +44,30 @@
     setup() {
       const store = useStore();
 
+      const selectedPizzas = computed(() => store.state.cart.selectedPizzas);
+      const additionalProducts = computed(() => store.state.cart.additionalProducts);
+      const deliveryInformation = computed(() => store.state.cart.delivery);
+      const user = computed(() => store.state.user.user);
+
       const composePizzasArray = () => {
         const pizzas = [];
 
-        for (let pizza in store.state.cart.selectedPizzas) {
+        for (let pizza in selectedPizzas.value) {
           const ingredients = [];
 
-          for (let ingredient in store.state.cart.selectedPizzas[pizza].consist.filling) {
+          for (let ingredient in selectedPizzas.value[pizza].consist.filling) {
             ingredients.push({
-              ingredientId: store.state.cart.selectedPizzas[pizza].consist.filling[ingredient].id,
-              quantity: store.state.cart.selectedPizzas[pizza].consist.filling[ingredient].counter,
+              ingredientId: selectedPizzas.value[pizza].consist.filling[ingredient].id,
+              quantity: selectedPizzas.value[pizza].consist.filling[ingredient].counter,
             });
           }
 
           pizzas.push({
-            name: store.state.cart.selectedPizzas[pizza].name,
-            sauceId: store.state.cart.selectedPizzas[pizza].consist.sauce.id,
-            doughId: store.state.cart.selectedPizzas[pizza].consist.dough.id,
-            sizeId: store.state.cart.selectedPizzas[pizza].consist.size.id,
-            quantity: store.state.cart.selectedPizzas[pizza].quantity,
+            name: selectedPizzas.value[pizza].name,
+            sauceId: selectedPizzas.value[pizza].consist.sauce.id,
+            doughId: selectedPizzas.value[pizza].consist.dough.id,
+            sizeId: selectedPizzas.value[pizza].consist.size.id,
+            quantity: selectedPizzas.value[pizza].quantity,
             ingredients: ingredients,
           });
         }
@@ -73,32 +77,32 @@
       const composeMiscArray = () => {
         const misc = [];
 
-        for (let add in store.state.cart.additionalProducts) {
+        for (let add in additionalProducts.value) {
           misc.push({
-            miscId: store.state.cart.additionalProducts[add]?.id,
-            quantity: store.state.cart.additionalProducts[add]?.quantity,
+            miscId: additionalProducts.value[add]?.id,
+            quantity: additionalProducts.value[add]?.quantity,
           });
         }
         return misc;
       };
 
       const onOrderSubmit = () => {
-        if (store.state.cart.delivery.deliveryMethod === DELIVERY_HIMSELF) {
+        if (deliveryInformation.value.deliveryMethod === DELIVERY_HIMSELF) {
           return submitOrder({
-            userId: store.state.user?.user?.id ?? '',
-            phone: store.state.cart.delivery.phone,
+            userId: user?.value.id ?? '',
+            phone: deliveryInformation.value.phone,
             pizzas: composePizzasArray(),
             misc: composeMiscArray(),
           });
         } else {
           return submitOrder({
-              userId: store.state.user?.user?.id ?? '',
-              phone: store.state.cart.delivery.phone,
+              userId: user?.value.id ?? '',
+              phone: deliveryInformation.value.phone,
               address: {
-                street: store.state.cart.delivery?.street ?? '',
-                building: store.state.cart.delivery?.building ?? '',
-                flat: store.state.cart.delivery?.flat ?? '',
-                comment: store.state.cart.delivery?.comment ?? '',
+                street: deliveryInformation.value.street ?? '',
+                building: deliveryInformation.value.building ?? '',
+                flat: deliveryInformation.value.flat ?? '',
+                comment: deliveryInformation.value.comment ?? '',
               },
               pizzas: composePizzasArray(),
               misc: composeMiscArray(),

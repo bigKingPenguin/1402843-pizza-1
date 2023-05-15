@@ -54,6 +54,7 @@
   import {getPizzaData} from '@/services/pizzaBuilder.service';
   import {DEFAULT_DOUGH, DEFAULT_SAUCE, DEFAULT_SIZE, DOUGH, NAME, PIZZA, SAUCE, SIZE} from '@/common/const/constants';
   import {getStorageData, removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
+  import router from '@/router/router';
 
   export default {
     name: 'PizzaBuilder',
@@ -104,18 +105,21 @@
 
       const countPrice = computed(() => store.getters[COUNT_PRICE]);
 
+      const storeBuilder = computed(() => store.state.builder);
+
       const addToCart = () => {
         if (isEdit.value) {
-          store.commit('cart/removePizza', store.state.builder.editedPizzaName);
+          store.commit('cart/removePizza', storeBuilder.value.editedPizzaName);
           store.commit('builder/toggleEditState');
+          router.push('/cart');
         }
         store.commit('cart/addPizza', {
-          name: store.state.builder.selectedPizzaName,
+          name: storeBuilder.value.selectedPizzaName,
           consist: {
-            dough: store.state.builder.selectedDough,
-            size: store.state.builder.selectedSize,
-            sauce: store.state.builder.selectedSauce,
-            filling: store.state.builder.selectedFilling,
+            dough: storeBuilder.value.selectedDough,
+            size: storeBuilder.value.selectedSize,
+            sauce: storeBuilder.value.selectedSauce,
+            filling: storeBuilder.value.selectedFilling,
           },
           price: countPrice.value,
           quantity: 1,
@@ -125,9 +129,9 @@
         removeStorageData(DOUGH);
         removeStorageData(SIZE);
         removeStorageData(SAUCE);
-        for (let fil in store.state.builder.selectedFilling) {
-          if (getStorageData(store.state.builder.selectedFilling[fil].value)) {
-            removeStorageData(store.state.builder.selectedFilling[fil].value);
+        for (let fil in storeBuilder.value.selectedFilling) {
+          if (getStorageData(storeBuilder.value.selectedFilling[fil].value)) {
+            removeStorageData(storeBuilder.value.selectedFilling[fil].value);
           }
         }
         store.commit('builder/resetBuilder');

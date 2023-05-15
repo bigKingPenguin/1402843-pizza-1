@@ -10,7 +10,7 @@
           :key="dough.id"
           name="dough"
           :data="dough"
-          :isChecked="dough.value === store.state.builder.selectedDough.value"
+          :isChecked="dough.value === selectedDough.value"
           @itemSelected="saveSelectedDough"
         />
       </div>
@@ -23,6 +23,7 @@
   import {useStore} from 'vuex';
   import {DOUGH} from '@/common/const/constants';
   import {saveDataInStorage} from '@/plugins/localStorage.service';
+  import {computed} from 'vue';
 
   export default {
     name: 'BuilderDought',
@@ -44,6 +45,7 @@
       return {
         store,
         saveSelectedDough,
+        selectedDough: computed(() => store.state.builder.selectedDough),
       };
     },
   };

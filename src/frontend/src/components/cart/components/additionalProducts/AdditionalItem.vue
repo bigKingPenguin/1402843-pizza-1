@@ -7,7 +7,7 @@
       :alt="itemData.name"
     >
     <span>{{ itemData.name }}</span>
-    <span> {{itemData.price}} ₽</span>
+    <span> {{ itemData.price }} ₽</span>
   </p>
 
   <div class="additional-list__wrapper">
@@ -46,19 +46,17 @@
       const counter = computed(() => store.state.cart.additionalProducts[props.itemData.value]?.quantity ?? 0);
 
       const itemPrice = ref(props.itemData.price);
-      const itemCost = computed(() => {
-        return itemPrice.value * (store.state.cart.additionalProducts[props.itemData.value]?.quantity ?? 0)
-      });
+      const itemCost = computed(() => itemPrice.value * counter.value);
 
       const onCounterChange = (event) => {
         store.commit('cart/addAdditionalProduct', {
           ...props.itemData,
           quantity: event,
         });
-        if (counter.value > 0 ) {
-          saveDataInStorage(props.itemData.value, counter.value);
+        if (counter.value > 0) {
+          saveDataInStorage(`additional_${props.itemData.value}`, counter.value);
         } else {
-          removeStorageData(props.itemData.value)
+          removeStorageData(`additional_${props.itemData.value}`);
         }
       };
 

@@ -134,7 +134,7 @@
       const setSelectedAddress = (index) => {
         store.commit('cart/getStreetData', props.userAddress[index].street);
         store.commit('cart/getBuildingData', props.userAddress[index].building);
-        store.commit('cart/getFlatData', props.userAddress[index]?.flat ?? '');
+        store.commit('cart/getFlatData', props.userAddress[index].flat ?? '');
         store.commit('cart/getComment', props.userAddress[index]?.comment ?? '');
       };
 

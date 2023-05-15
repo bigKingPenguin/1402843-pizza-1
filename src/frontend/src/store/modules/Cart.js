@@ -35,7 +35,6 @@ export default {
       state.selectedPizzas = payload;
     },
     addPizza(state, payload) {
-      console.log(payload);
       state.selectedPizzas[payload.name] = payload;
     },
     changePizzaQuantity(state, payload) {
@@ -50,6 +49,9 @@ export default {
       } else {
         state.additionalProducts[payload.value] = payload;
       }
+    },
+    removeAdditionalProducts(state) {
+      state.additionalProducts = {};
     },
     changeDeliveryMethod(state, payload) {
       state.delivery.deliveryMethod = payload;

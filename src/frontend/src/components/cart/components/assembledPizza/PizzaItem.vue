@@ -51,7 +51,7 @@
   import {computed, ref} from 'vue';
   import Button from '@/common/button/Button.vue';
   import {useRouter} from 'vue-router';
-  import {removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
+  import {getStorageData, removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
     name: 'PizzaItem',
@@ -66,6 +66,9 @@
       const store = useStore();
       const router = useRouter();
 
+      const selectedPizzas = computed(() => store.state.cart.selectedPizzas);
+      const additionalProducts = computed(() => store.state.cart.additionalProducts);
+
       const getFillingList = () => {
         let acc = [];
 
@@ -75,15 +78,15 @@
         return acc.join(', ');
       };
 
-      const counter = computed(() => store.state.cart.selectedPizzas[props.pizzaData.name]?.quantity ?? CART_PIZZA_MINIMUM_COUNT);
+      const counter = computed(() => selectedPizzas.value[props.pizzaData.name]?.quantity ?? CART_PIZZA_MINIMUM_COUNT);
 
       const pizzaPrice = ref(props.pizzaData.price);
-      const pizzaCost = computed(() => pizzaPrice.value * store.state.cart.selectedPizzas[props.pizzaData.name].quantity);
+      const pizzaCost = computed(() => pizzaPrice.value * selectedPizzas.value[props.pizzaData.name].quantity);
 
       const onCounterChange = (event) => {
         store.commit('cart/changePizzaQuantity', {name: props.pizzaData.name, quantity: event});
         if (counter.value > 0) {
-          saveDataInStorage(PIZZA, JSON.stringify(store.state.cart.selectedPizzas));
+          saveDataInStorage(PIZZA, JSON.stringify(selectedPizzas.value));
         } else {
           removeStorageData(props.pizzaData.name);
         }
@@ -91,7 +94,15 @@
 
       const removePizza = () => {
         store.commit('cart/removePizza', props.pizzaData.name);
-        saveDataInStorage('pizza', JSON.stringify(store.state.cart.selectedPizzas));
+        saveDataInStorage('pizza', JSON.stringify(selectedPizzas.value));
+        if (!Object.keys(selectedPizzas.value).length) {
+          for (let add in additionalProducts.value) {
+            if (getStorageData(`additional_${add}`)) {
+              removeStorageData(`additional_${add}`);
+            }
+          }
+          store.commit('cart/removeAdditionalProducts');
+        }
       };
 
       const editSelectedPizza = () => {
