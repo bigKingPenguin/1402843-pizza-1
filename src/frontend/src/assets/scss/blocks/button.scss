@@ -21,6 +21,12 @@
 
   background-color: $green-500;
 
+  &--green {
+    min-width: 170px;
+    margin-left: 12px;
+    padding: 16px 15px;
+  }
+
   &:hover:not(:active):not(#{$bl}--disabled) {
     background-color: $green-400;
   }

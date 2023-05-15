@@ -9,7 +9,7 @@
           :key="size.id"
           name="diameter"
           :data="size"
-          :isChecked="size.value === store.state.builder.selectedSize.value"
+          :isChecked="size.value === selectedSize.value"
           @itemSelected="saveSelectedSize"
         />
       </div>
@@ -23,6 +23,7 @@
   import {useStore} from 'vuex';
   import {saveDataInStorage} from '@/plugins/localStorage.service';
   import {SIZE} from '@/common/const/constants';
+  import {computed} from 'vue';
 
   export default {
     name: 'BuilderSize',
@@ -44,6 +45,7 @@
       return {
         store,
         saveSelectedSize,
+        selectedSize: computed(() => store.state.builder.selectedSize),
       };
     },
   };

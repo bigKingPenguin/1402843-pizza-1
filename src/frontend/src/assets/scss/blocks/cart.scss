@@ -3,10 +3,15 @@
 }
 
 .cart__additional {
-  margin-top: 15px;
   margin-bottom: 25px;
 }
 
 .cart__empty {
   padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+
+  & p {
+    font-size: 18px;
+  }
 }

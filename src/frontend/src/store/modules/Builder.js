@@ -10,10 +10,12 @@ export default {
   namespaced: true,
   state: () => ({
     selectedPizzaName: '',
+    editedPizzaName: '',
     selectedDough: {},
     selectedSize: {},
     selectedSauce: {},
     selectedFilling: {},
+    isEdit: false,
   }),
   getters: {
     isReadyToCook(state) {
@@ -57,11 +59,15 @@ export default {
       Object.assign(state, setupState());
     },
     editSelectedPizza(state, payload) {
+      state.editedPizzaName = payload.editedName;
       state.selectedPizzaName = payload.name;
       state.selectedDough = payload.dough;
       state.selectedSize = payload.size;
       state.selectedSauce = payload.sauce;
       state.selectedFilling = payload.filling;
+    },
+    toggleEditState(state) {
+      state.isEdit = !state.isEdit;
     },
   },
   actions: {},

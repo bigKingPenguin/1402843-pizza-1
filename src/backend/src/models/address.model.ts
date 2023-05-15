@@ -13,26 +13,24 @@ export class Address extends Entity {
 
   @property({
     type: 'string',
+    required: true,
   })
-  name?: string;
+  name: string;
 
   @property({
     type: 'string',
-    required: true,
   })
   street: string;
 
   @property({
     type: 'string',
-    required: true,
   })
   building: string;
 
   @property({
     type: 'string',
-    required: true,
   })
-  flat: string;
+  flat?: string;
 
   @property({
     type: 'string',

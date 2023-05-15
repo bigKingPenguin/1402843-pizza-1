@@ -44,14 +44,14 @@
 </template>
 
 <script>
-  import {DOUGH_DESCRIPTION} from '@/common/const/pizza-description-dictionary';
-  import {CART_PIZZA_MINIMUM_COUNT} from '@/common/const/constants';
+  import {DOUGH_DESCRIPTION} from '@/common/const/dictionary';
+  import {CART_PIZZA_MINIMUM_COUNT, PIZZA} from '@/common/const/constants';
   import ItemCounter from '@/common/input/ItemCounter.vue';
   import {useStore} from 'vuex';
   import {computed, ref} from 'vue';
   import Button from '@/common/button/Button.vue';
   import {useRouter} from 'vue-router';
-  import {saveDataInStorage} from '@/plugins/localStorage.service';
+  import {getStorageData, removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
 
   export default {
     name: 'PizzaItem',
@@ -66,6 +66,9 @@
       const store = useStore();
       const router = useRouter();
 
+      const selectedPizzas = computed(() => store.state.cart.selectedPizzas);
+      const additionalProducts = computed(() => store.state.cart.additionalProducts);
+
       const getFillingList = () => {
         let acc = [];
 
@@ -75,32 +78,44 @@
         return acc.join(', ');
       };
 
-      const counter = computed(() => store.state.cart.selectedPizzas[props.pizzaData.name]?.quantity ?? CART_PIZZA_MINIMUM_COUNT);
+      const counter = computed(() => selectedPizzas.value[props.pizzaData.name]?.quantity ?? CART_PIZZA_MINIMUM_COUNT);
 
       const pizzaPrice = ref(props.pizzaData.price);
-      const pizzaCost = ref(pizzaPrice.value);
+      const pizzaCost = computed(() => pizzaPrice.value * selectedPizzas.value[props.pizzaData.name].quantity);
 
       const onCounterChange = (event) => {
-        console.log(event);
         store.commit('cart/changePizzaQuantity', {name: props.pizzaData.name, quantity: event});
-        pizzaCost.value = pizzaPrice.value * counter.value;
+        if (counter.value > 0) {
+          saveDataInStorage(PIZZA, JSON.stringify(selectedPizzas.value));
+        } else {
+          removeStorageData(props.pizzaData.name);
+        }
       };
 
       const removePizza = () => {
         store.commit('cart/removePizza', props.pizzaData.name);
-        saveDataInStorage('pizza', JSON.stringify(store.state.cart.selectedPizzas));
+        saveDataInStorage('pizza', JSON.stringify(selectedPizzas.value));
+        if (!Object.keys(selectedPizzas.value).length) {
+          for (let add in additionalProducts.value) {
+            if (getStorageData(`additional_${add}`)) {
+              removeStorageData(`additional_${add}`);
+            }
+          }
+          store.commit('cart/removeAdditionalProducts');
+        }
       };
 
       const editSelectedPizza = () => {
+        store.commit('builder/toggleEditState');
         router.push('/');
         store.commit('builder/editSelectedPizza', {
           name: props.pizzaData.name,
+          editedName: props.pizzaData.name,
           dough: props.pizzaData.consist.dough,
           size: props.pizzaData.consist.size,
           sauce: props.pizzaData.consist.sauce,
           filling: props.pizzaData.consist.filling,
         });
-        store.commit('cart/removePizza', props.pizzaData.name);
       };
 
       return {

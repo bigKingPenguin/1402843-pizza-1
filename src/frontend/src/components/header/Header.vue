@@ -18,7 +18,7 @@
     </div>
 
     <div
-      v-if="!store.state.user.user"
+      v-if="!user"
       class="header__user"
     >
       <a
@@ -38,7 +38,7 @@
         href="#"
         @click="router.push('/cart')"
       >
-        <img :src="require('@/assets/img/users/user5@2x.jpg')" :alt="`${store.state.user.user.name}`" width="32"
+        <img :src="require('@/assets/img/users/user5@2x.jpg')" :alt="`${user.name}`" width="32"
              height="32">
         <span>{{ store.state.user.user.name }}</span>
       </a>
@@ -92,6 +92,7 @@
         store,
         router,
         orderCost,
+        user: computed(() => store.state.user.user),
       };
     },
   };

@@ -1,6 +1,6 @@
 <template>
   <button
-    type="button"
+    :type="buttonType"
     :class="buttonClass"
   >
     {{ buttonText }}
@@ -18,6 +18,10 @@
       buttonClass: {
         type: String,
         required: true,
+      },
+      buttonType: {
+        type: String,
+        default: 'button',
       },
     },
   };

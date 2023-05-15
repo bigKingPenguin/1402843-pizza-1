@@ -1,8 +1,6 @@
 <template>
-  <label class="input">
-    <span
-      :class="{'visually-hidden' : isHiddenLabel}"
-    >
+  <label :class="`input ${labelClass}`">
+    <span :class="{'visually-hidden' : isHiddenLabel}">
       {{ inputLabel }}
     </span>
     <input
@@ -25,6 +23,10 @@
       inputLabel: {
         type: String,
         required: true,
+      },
+      labelClass: {
+        type: String,
+        default: '',
       },
       isHiddenLabel: {
         type: Boolean,
