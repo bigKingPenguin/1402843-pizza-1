@@ -88,15 +88,16 @@
 
       const onOrderSubmit = () => {
         if (deliveryInformation.value.deliveryMethod === DELIVERY_HIMSELF) {
-          return submitOrder({
-            userId: user?.value.id ?? '',
-            phone: deliveryInformation.value.phone,
-            pizzas: composePizzasArray(),
-            misc: composeMiscArray(),
-          });
+          submitOrder({
+              userId: user?.value?.id ?? null,
+              phone: deliveryInformation.value.phone,
+              pizzas: composePizzasArray(),
+              misc: composeMiscArray(),
+            },
+          );
         } else {
-          return submitOrder({
-              userId: user?.value.id ?? '',
+          submitOrder({
+              userId: user?.value?.id ?? null,
               phone: deliveryInformation.value.phone,
               address: {
                 street: deliveryInformation.value.street ?? '',
@@ -109,6 +110,7 @@
             },
           );
         }
+        store.commit('common/toggleOrderSubmitPopup', true);
       };
 
       return {

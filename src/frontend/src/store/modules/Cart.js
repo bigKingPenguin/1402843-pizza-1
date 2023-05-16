@@ -1,5 +1,18 @@
 import {DELIVERY_HIMSELF, DELIVERY_HOME, DELIVERY_NEW_ADDRESS} from '@/common/const/constants';
 
+const setupState = () => ({
+  selectedPizzas: {},
+  additionalProducts: {},
+  delivery: {
+    deliveryMethod: DELIVERY_HIMSELF,
+    phone: null,
+    street: null,
+    building: null,
+    flat: null,
+    comment: null,
+  },
+});
+
 export default {
   namespaced: true,
   state: () => ({
@@ -75,6 +88,9 @@ export default {
       state.delivery.street = null;
       state.delivery.building = null;
       state.delivery.flat = null;
+    },
+    resetCart(state) {
+      Object.assign(state, setupState());
     },
   },
 };

@@ -1,5 +1,6 @@
 const setupState = () => ({
   selectedPizzaName: '',
+  editedPizzaName: '',
   selectedDough: {},
   selectedSize: {},
   selectedSauce: {},
