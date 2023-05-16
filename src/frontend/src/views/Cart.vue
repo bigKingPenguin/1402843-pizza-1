@@ -38,6 +38,17 @@
     v-if="Object.keys(store.state.cart.selectedPizzas).length"
     :orderCost="orderCost"
   />
+  <vue-final-modal
+    :hideOverlay="false"
+    overlayTransition="vfm-fade"
+    contentTransition="vfm-fade"
+    :clickToClose="false"
+    :escToClose="false"
+    lockScroll
+    v-model="store.state.common.showOrderSubmitPopup"
+  >
+    <OrderSubmitPopup @closePopup="closePopup"/>
+  </vue-final-modal>
 </template>
 
 <script>
@@ -48,13 +59,24 @@
   import {computed, onMounted, ref, watch} from 'vue';
   import {getAdditionalProducts, getUserAddress} from '@/services/cart.service';
   import CartFooter from '@/components/cart/components/CartFooter.vue';
-  import {getStorageData} from '@/plugins/localStorage.service';
+  import {getStorageData, removeStorageData} from '@/plugins/localStorage.service';
   import Button from '@/common/button/Button.vue';
   import {useRouter} from 'vue-router';
+  import OrderSubmitPopup from '@/components/modals/OrderSubmitPopup.vue';
+  import {VueFinalModal} from 'vue-final-modal';
+  import {PIZZA} from '@/common/const/constants';
 
   export default {
     name: 'Cart',
-    components: {Button, CartFooter, DeliveryInformation, AdditionalProducts, AssembledPizza},
+    components: {
+      OrderSubmitPopup,
+      Button,
+      CartFooter,
+      DeliveryInformation,
+      AdditionalProducts,
+      AssembledPizza,
+      VueFinalModal,
+    },
     setup() {
       const store = useStore();
       const router = useRouter();
@@ -94,6 +116,22 @@
         return store.getters['cart/calculateFinalCost'];
       });
 
+      const closePopup = () => {
+        for (let add in store.state.cart.additionalProducts) {
+          if (getStorageData(`additional_${add}`)) {
+            removeStorageData(`additional_${add}`);
+          }
+        }
+        store.commit('common/toggleOrderSubmitPopup', false);
+        store.commit('cart/resetCart');
+        removeStorageData(PIZZA);
+        if (user.value) {
+          router.push('/profile');
+        } else {
+          router.push('/');
+        }
+      };
+
       return {
         store,
         isLoaded,
@@ -101,6 +139,7 @@
         orderCost,
         currentAddress,
         router,
+        closePopup,
       };
     },
   };
