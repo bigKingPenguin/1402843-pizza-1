@@ -34,18 +34,15 @@
       v-else
       class="header__user"
     >
-      <a
-        href="#"
-        @click="router.push('/cart')"
-      >
-        <img :src="require('@/assets/img/users/user5@2x.jpg')" :alt="`${user.name}`" width="32"
+      <router-link to="/profile">
+        <img :src="store.state.user.user.avatar" :alt="`${user.name}`" width="32"
              height="32">
         <span>{{ store.state.user.user.name }}</span>
-      </a>
+      </router-link>
       <a
         href="#"
         class="header__logout"
-        @click.prevent="logout"
+        @click.prevent="logOut"
       >
         <span>Выйти</span>
       </a>
@@ -72,27 +69,35 @@
   import {computed} from 'vue';
   import {VueFinalModal} from 'vue-final-modal';
   import Login from '@/components/modals/Login.vue';
-  import {useRouter} from 'vue-router';
+  import {useRoute, useRouter} from 'vue-router';
   import {logout} from '@/services/authorisation.service';
 
   export default {
     name: 'Header',
-    methods: {logout},
     components: {Login, VueFinalModal},
 
     setup() {
       const store = useStore();
       const router = useRouter();
+      const route = useRoute();
 
       const orderCost = computed(() => {
         return store.getters['cart/calculateFinalCost'];
       });
+
+      const logOut = () => {
+        logout();
+        if (route.path === '/profile') {
+          router.push({name: 'main'});
+        }
+      };
 
       return {
         store,
         router,
         orderCost,
         user: computed(() => store.state.user.user),
+        logOut,
       };
     },
   };
