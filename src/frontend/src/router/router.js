@@ -1,4 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router';
+import {store} from '@/store/store';
 
 const routes = [
   {
@@ -15,6 +16,21 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: () => import('../views/Profile.vue'),
+    beforeEnter: async (to, from, next) => {
+      if (store.state.user.user?.id) {
+        next();
+      } else {
+        await next({
+          name: 'main',
+        });
+        store.commit('common/toggleLoginModal', true);
+      }
+    },
+  },
+  {
+    path: '/orders',
+    name: 'orders',
+    component: () => import('../views/Orders.vue'),
   },
 ];
 

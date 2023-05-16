@@ -1,10 +1,13 @@
 <template>
-  <div></div>
+  <Sidebar/>
 </template>
 
 <script>
+  import Sidebar from '@/common/sidebar/Sidebar.vue';
+
   export default {
     name: 'Orders',
+    components: {Sidebar},
   };
 </script>
 
