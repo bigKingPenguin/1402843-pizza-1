@@ -59,7 +59,7 @@
   import {computed, onMounted, ref, watch} from 'vue';
   import {getAdditionalProducts, getUserAddress} from '@/services/cart.service';
   import CartFooter from '@/components/cart/components/CartFooter.vue';
-  import {getStorageData, removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
+  import {getStorageData, removeStorageData} from '@/plugins/localStorage.service';
   import Button from '@/common/button/Button.vue';
   import {useRouter} from 'vue-router';
   import OrderSubmitPopup from '@/components/modals/OrderSubmitPopup.vue';
@@ -124,7 +124,7 @@
         }
         store.commit('common/toggleOrderSubmitPopup', false);
         store.commit('cart/resetCart');
-        saveDataInStorage(PIZZA, JSON.stringify(store.state.cart.selectedPizzas));
+        removeStorageData(PIZZA);
         if (user.value) {
           router.push('/profile');
         } else {
