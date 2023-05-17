@@ -27,6 +27,12 @@
 
     padding: 0 16px;
   }
+
+  &__edit {
+    width: 6%;
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .address-form__wrapper {
@@ -44,11 +50,11 @@
 
   &--size {
     &--normal {
-      width: 60.5%;
+      width: 58.5%;
     }
 
     &--small {
-      width: 18%;
+      width: 19%;
     }
   }
 }

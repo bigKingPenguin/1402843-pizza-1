@@ -15,6 +15,10 @@
   background-repeat: no-repeat;
   background-position: center;
 
+  &--delete {
+    background-image: url("~@/assets/img/delete.svg");
+  }
+
   &:hover {
     box-shadow: $shadow-light;
   }

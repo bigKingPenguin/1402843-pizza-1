@@ -1,54 +1,149 @@
 <template>
   <div class="layout__address">
-    <form action="test.html" method="post" class="address-form address-form--opened sheet">
+    <form class="address-form address-form--opened sheet">
       <div class="address-form__header">
-        <b>Адрес №1</b>
+        <b>{{ changingAddress ? model.name : 'Новый адрес' }}</b>
       </div>
 
       <div class="address-form__wrapper">
+
         <div class="address-form__input">
-          <label class="input">
-            <span>Название адреса*</span>
-            <input type="text" name="addr-name" placeholder="Введите название адреса" required>
-          </label>
+          <Input
+            inputType="text"
+            inputName="addr-name"
+            inputLabel="Название адреса*"
+            inputPlaceholder="Введите название адреса"
+            isRequired
+            :inputValue="model.name"
+            @update:onInput="model.name = $event"
+          />
         </div>
+
         <div class="address-form__input address-form__input--size--normal">
-          <label class="input">
-            <span>Улица*</span>
-            <input type="text" name="addr-street" placeholder="Введите название улицы" required>
-          </label>
+          <Input
+            inputType="text"
+            inputName="addr-street"
+            inputLabel="Улица*"
+            inputPlaceholder="Введите название улицы"
+            isRequired
+            :inputValue="model.street"
+            @update:onInput="model.street = $event"
+          />
         </div>
+
         <div class="address-form__input address-form__input--size--small">
-          <label class="input">
-            <span>Дом*</span>
-            <input type="text" name="addr-house" placeholder="Введите номер дома" required>
-          </label>
+          <Input
+            inputType="text"
+            inputName="addr-house"
+            inputLabel="Дом*"
+            inputPlaceholder="Введите номер дома"
+            isRequired
+            :inputValue="model.building"
+            @update:onInput="model.building = $event"
+          />
         </div>
+
         <div class="address-form__input address-form__input--size--small">
-          <label class="input">
-            <span>Квартира</span>
-            <input type="text" name="addr-apartment" placeholder="Введите № квартиры">
-          </label>
+          <Input
+            inputType="text"
+            inputName="addr-apartment"
+            inputLabel="Квартира"
+            inputPlaceholder="Введите № квартиры"
+            :inputValue="model.flat"
+            @update:onInput="model.flat = $event"
+          />
         </div>
+
         <div class="address-form__input">
-          <label class="input">
-            <span>Комментарий</span>
-            <input type="text" name="addr-comment" placeholder="Введите комментарий">
-          </label>
+          <Input
+            inputType="text"
+            inputName="addr-comment"
+            inputLabel="Комментарий"
+            inputPlaceholder="Введите комментарий"
+            :inputValue="model.comment"
+            @update:onInput="model.comment = $event"
+          />
         </div>
+
       </div>
 
       <div class="address-form__buttons">
-        <button type="button" class="button button--transparent">Удалить</button>
-        <button type="submit" class="button">Сохранить</button>
+        <Button
+          buttonType="button"
+          buttonClass="button button--transparent"
+          buttonText="Отменить"
+          @click="closeForm"
+        />
+        <Button
+          buttonType="submit"
+          buttonClass="button"
+          buttonText="Сохранить"
+          :disabled="!isReadyToSave"
+          :class="{'button--disabled': !isReadyToSave}"
+          @click.prevent="saveAddress"
+        />
       </div>
     </form>
   </div>
 </template>
 
 <script>
+  import Input from '@/common/input/Input.vue';
+  import Button from '@/common/button/Button.vue';
+  import {computed, onMounted, ref} from 'vue';
+  import {useStore} from 'vuex';
+  import {editAddress, setAddress} from '@/services/address.service';
+
   export default {
     name: 'AddressForm',
+    components: {Button, Input},
+    emits: ['closeForm', 'closeFormAndRefresh'],
+    setup(props, {emit}) {
+      const store = useStore();
+      const changingAddress = computed(() => store.state.user.changingAddress);
+
+      const model = ref({
+        name: '',
+        userId: store.state.user.user.id,
+        street: '',
+        building: '',
+        flat: '',
+        comment: '',
+      });
+
+      onMounted(() => {
+        if (changingAddress.value) {
+          for (let i in changingAddress.value) {
+            model.value[i] = changingAddress.value[i];
+          }
+        }
+      });
+
+      const closeForm = () => {
+        store.commit('user/clearChangingAddress');
+        emit('closeForm');
+      };
+
+      const isReadyToSave = computed(() => model.value.name && model.value.street && model.value.building);
+
+      const saveAddress = async () => {
+        if (changingAddress.value) {
+          await editAddress(model.value, changingAddress.value.id);
+          store.commit('user/clearChangingAddress');
+        } else {
+          await setAddress(model.value);
+        }
+        emit('closeFormAndRefresh');
+      };
+
+      return {
+        model,
+        isReadyToSave,
+        saveAddress,
+        changingAddress,
+        closeForm,
+      };
+    },
   };
 </script>
 

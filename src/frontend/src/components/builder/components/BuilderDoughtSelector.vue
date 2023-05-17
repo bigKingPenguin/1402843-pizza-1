@@ -4,7 +4,6 @@
       <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
       <div class="sheet__content dough">
-        <!--      TODO: в pizza.json временно добавлен value для dough-->
         <SelectorItem
           v-for="dough in pizzaDough"
           :key="dough.id"

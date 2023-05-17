@@ -99,7 +99,7 @@ export class OrderController {
     let addressId = address?.id;
     // if it is a new address
     if (address && !addressId) {
-      const name = `ул.${address.street}, д.${address.building}, кв.${address.flat}`;
+      const name = `ул.${address.street}, д.${address.building}${address.flat ? `, кв. ${address.flat}` : ''}`;
       const newAddress = await this.addressRepository.create({...address, name, userId});
       addressId = newAddress.id;
     }

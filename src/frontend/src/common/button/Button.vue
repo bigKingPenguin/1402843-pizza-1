@@ -13,7 +13,7 @@
     props: {
       buttonText: {
         type: String,
-        required: true,
+        default: '',
       },
       buttonClass: {
         type: String,

@@ -57,7 +57,7 @@
   import DeliveryInformation from '@/components/cart/components/DeliveryInformation.vue';
   import {useStore} from 'vuex';
   import {computed, onMounted, ref, watch} from 'vue';
-  import {getAdditionalProducts, getUserAddress} from '@/services/cart.service';
+  import {getAdditionalProducts} from '@/services/cart.service';
   import CartFooter from '@/components/cart/components/CartFooter.vue';
   import {getStorageData, removeStorageData} from '@/plugins/localStorage.service';
   import Button from '@/common/button/Button.vue';
@@ -65,6 +65,7 @@
   import OrderSubmitPopup from '@/components/modals/OrderSubmitPopup.vue';
   import {VueFinalModal} from 'vue-final-modal';
   import {PIZZA} from '@/common/const/constants';
+  import {getUserAddress} from '@/services/address.service';
 
   export default {
     name: 'Cart',
@@ -126,6 +127,7 @@
         store.commit('cart/resetCart');
         removeStorageData(PIZZA);
         if (user.value) {
+          //TODO: редирект на страницу истории заказов
           router.push('/profile');
         } else {
           router.push('/');

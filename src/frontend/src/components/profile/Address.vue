@@ -1,21 +1,64 @@
 <template>
-  <div class="layout__address">
+  <div
+    class="layout__address"
+    v-for="address in addresses"
+    :key="address.name"
+  >
     <div class="sheet address-form">
+
       <div class="address-form__header">
-        <b>Адрес №1. Тест</b>
+        <b>{{ address.name }}</b>
         <div class="address-form__edit">
-          <button type="button" class="icon"><span class="visually-hidden">Изменить адрес</span></button>
+          <Button
+            buttonType="button"
+            buttonClass="icon icon--edit"
+            @click="$emit('changeAddress', address.name)"
+          >
+            <span class="visually-hidden">Изменить адрес</span>
+          </Button>
+          <Button
+            buttonType="button"
+            buttonClass="icon icon--delete"
+            @click="deleteAddress(address.name)"
+          >
+            <span class="visually-hidden">Удалить адрес</span>
+          </Button>
         </div>
       </div>
-      <p>Невский пр., д. 22, оф. 46</p>
-      <small>Позвоните, пожалуйста, от проходной</small>
+
+      <p>ул. {{ address.street }}, д. {{ address.building }}{{ address.flat ? `, кв. ${address.flat}` : '' }}</p>
+      <small>{{ address.comment }}</small>
+
     </div>
   </div>
 </template>
 
 <script>
+  import {useStore} from 'vuex';
+  import {computed} from 'vue';
+  import Button from '@/common/button/Button.vue';
+  import {removeAddress} from '@/services/address.service';
+
   export default {
     name: 'Address',
+    components: {Button},
+    emits: ['changeAddress', 'refreshPage'],
+    setup(props, {emit}) {
+      const store = useStore();
+
+      const addresses = computed(() => store.state.user.address);
+
+      const deleteAddress = async (addressName) => {
+        console.log(addresses.value[addressName]);
+        await removeAddress(addresses.value[addressName].id);
+        emit('refreshPage');
+      };
+
+      return {
+        addresses,
+        deleteAddress,
+      };
+    },
   };
 </script>
 

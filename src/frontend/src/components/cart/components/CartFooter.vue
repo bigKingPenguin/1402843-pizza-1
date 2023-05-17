@@ -103,7 +103,6 @@
                 street: deliveryInformation.value.street ?? '',
                 building: deliveryInformation.value.building ?? '',
                 flat: deliveryInformation.value.flat ?? '',
-                comment: deliveryInformation.value.comment ?? '',
               },
               pizzas: composePizzasArray(),
               misc: composeMiscArray(),
