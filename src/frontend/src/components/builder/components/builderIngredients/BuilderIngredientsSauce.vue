@@ -1,8 +1,6 @@
 <template>
   <div class="ingridients__sauce">
     <p>Основной соус:</p>
-
-    <!--    TODO: в pizza.json временно добавлен value для sauces-->
     <Radio
       v-for="sauce in pizzaSauce"
       :key="sauce.id"

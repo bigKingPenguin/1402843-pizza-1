@@ -3,6 +3,12 @@
     :type="buttonType"
     :class="buttonClass"
   >
+    <span
+      v-if="hiddenDescription"
+      class="visually-hidden"
+    >
+      {{ hiddenDescription }}
+    </span>
     {{ buttonText }}
   </button>
 </template>
@@ -13,7 +19,7 @@
     props: {
       buttonText: {
         type: String,
-        required: true,
+        default: '',
       },
       buttonClass: {
         type: String,
@@ -22,6 +28,10 @@
       buttonType: {
         type: String,
         default: 'button',
+      },
+      hiddenDescription: {
+        type: String,
+        default: '',
       },
     },
   };

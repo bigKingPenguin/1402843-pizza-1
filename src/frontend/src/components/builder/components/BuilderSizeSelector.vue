@@ -3,7 +3,6 @@
     <div class="sheet">
       <h2 class="title title--small sheet__title">Выберите размер</h2>
       <div class="sheet__content diameter">
-        <!--      TODO: в pizza.json временно добавлен value для size-->
         <SelectorItem
           v-for="size in pizzaSizes"
           :key="size.id"

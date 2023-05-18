@@ -8,15 +8,23 @@
 
       <UserData/>
 
-      <Address/>
+      <Address
+        @changeAddress="changeAddress"
+        @refreshPage="refreshPage"
+      />
 
-      <AddressForm/>
+      <AddressForm
+        v-if="isFormOpen"
+        @closeForm="isFormOpen = false"
+        @closeFormAndRefresh="refreshPage"
+      />
 
       <div class="layout__button">
         <Button
           buttonType="button"
           buttonClass="button button--border"
           buttonText="Добавить новый адрес"
+          @click="isFormOpen = true"
         />
       </div>
     </div>
@@ -29,23 +37,46 @@
   import Sidebar from '@/common/sidebar/Sidebar.vue';
   import UserData from '@/components/profile/UserData.vue';
   import {onMounted, ref} from 'vue';
-  import {getUserAddress} from '@/services/cart.service';
+  import {getUserAddress} from '@/services/address.service';
   import Button from '@/common/button/Button.vue';
+  import {useStore} from 'vuex';
 
   export default {
     name: 'Profile',
     components: {Button, UserData, Sidebar, AddressForm, Address},
     setup() {
+      const store = useStore();
       const isLoaded = ref(false);
+      const isFormOpen = ref(false);
+
+      const getAddress = async () => {
+        const userAddresses = await getUserAddress();
+        store.commit('user/clearAddresses');
+        for (let address in userAddresses) {
+          store.commit('user/getUserAddress', userAddresses[address]);
+        }
+      };
 
       onMounted(async () => {
-        const userAddresses = await getUserAddress();
+        await getAddress();
         isLoaded.value = true;
-        return userAddresses;
       });
+
+      const refreshPage = async () => {
+        await getAddress();
+        isFormOpen.value = false;
+      };
+
+      const changeAddress = (address) => {
+        store.commit('user/addChangingAddress', address);
+        isFormOpen.value = true;
+      };
 
       return {
         isLoaded,
+        isFormOpen,
+        changeAddress,
+        refreshPage,
       };
     },
   };

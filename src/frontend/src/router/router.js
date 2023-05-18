@@ -1,5 +1,9 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import {store} from '@/store/store';
+import {computed} from 'vue';
+import {getStorageData} from '@/plugins/localStorage.service';
+import {TOKEN} from '@/common/const/constants';
+import {getUserData} from '@/services/user.service';
 
 const routes = [
   {
@@ -16,16 +20,6 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: () => import('../views/Profile.vue'),
-    beforeEnter: async (to, from, next) => {
-      if (store.state.user.user?.id) {
-        next();
-      } else {
-        await next({
-          name: 'main',
-        });
-        store.commit('common/toggleLoginModal', true);
-      }
-    },
   },
   {
     path: '/orders',
@@ -38,5 +32,23 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+router.beforeEach(async (to) => {
+
+    const user = computed(() => store.state.user.user);
+
+    if (!user.value) {
+      if (getStorageData(TOKEN)) await getUserData();
+    }
+    if (to.name === 'profile') {
+      if (!user.value) {
+        store.commit('common/toggleLoginModal', true);
+        return {
+          name: 'main',
+        };
+      }
+    }
+  },
+);
 
 export default router;
