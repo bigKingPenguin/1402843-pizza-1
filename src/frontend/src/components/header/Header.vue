@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header__logo">
       <router-link
-        to="/"
+        :to="ROUTE_MAIN"
         class="logo"
       >
         <img
@@ -14,7 +14,9 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{ orderCost }} ₽</router-link>
+      <router-link :to="ROUTE_CART">
+        {{ orderCost }} ₽
+      </router-link>
     </div>
 
     <div
@@ -34,7 +36,7 @@
       v-else
       class="header__user"
     >
-      <router-link to="/profile">
+      <router-link :to="ROUTE_PROFILE">
         <img :src="store.state.user.user.avatar" :alt="`${user.name}`" width="32"
              height="32">
         <span>{{ store.state.user.user.name }}</span>
@@ -71,6 +73,7 @@
   import Login from '@/components/modals/Login.vue';
   import {useRoute, useRouter} from 'vue-router';
   import {logout} from '@/services/authorisation.service';
+  import {ROUTE_CART, ROUTE_MAIN, ROUTE_PROFILE} from '@/common/const/constants';
 
   export default {
     name: 'Header',
@@ -87,7 +90,7 @@
 
       const logOut = () => {
         logout();
-        if (route.path === '/profile') {
+        if (route.path === ROUTE_PROFILE) {
           router.push({name: 'main'});
         }
       };
@@ -98,6 +101,9 @@
         orderCost,
         user: computed(() => store.state.user.user),
         logOut,
+        ROUTE_MAIN,
+        ROUTE_CART,
+        ROUTE_PROFILE,
       };
     },
   };

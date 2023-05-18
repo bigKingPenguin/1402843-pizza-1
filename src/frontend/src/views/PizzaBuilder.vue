@@ -52,7 +52,7 @@
   import {useStore} from 'vuex';
   import {COUNT_PRICE, IS_READY_TO_COOK} from '@/store/modules/builder-getter-types';
   import {getPizzaData} from '@/services/pizzaBuilder.service';
-  import {DEFAULT_DOUGH, DEFAULT_SAUCE, DEFAULT_SIZE, DOUGH, NAME, PIZZA, SAUCE, SIZE} from '@/common/const/constants';
+  import {DEFAULT_DOUGH, DEFAULT_SAUCE, DEFAULT_SIZE, DOUGH, NAME, PIZZA, ROUTE_CART, SAUCE, SIZE} from '@/common/const/constants';
   import {getStorageData, removeStorageData, saveDataInStorage} from '@/plugins/localStorage.service';
   import router from '@/router/router';
 
@@ -111,7 +111,7 @@
         if (isEdit.value) {
           store.commit('cart/removePizza', storeBuilder.value.editedPizzaName);
           store.commit('builder/toggleEditState');
-          router.push('/cart');
+          router.push(ROUTE_CART);
         }
         store.commit('cart/addPizza', {
           name: storeBuilder.value.selectedPizzaName,

@@ -2,7 +2,7 @@
   <section class="footer">
     <div class="footer__more">
       <router-link
-        to="/"
+        :to="ROUTE_MAIN"
         class="button button--border button--arrow"
       >
         Хочу еще одну
@@ -29,7 +29,7 @@
   import {useStore} from 'vuex';
   import Button from '@/common/button/Button.vue';
   import {submitOrder} from '@/services/cart.service';
-  import {DELIVERY_HIMSELF} from '@/common/const/constants';
+  import {DELIVERY_HIMSELF, ROUTE_MAIN} from '@/common/const/constants';
   import {computed} from 'vue';
 
   export default {
@@ -115,6 +115,7 @@
       return {
         store,
         onOrderSubmit,
+        ROUTE_MAIN,
       };
     },
   };

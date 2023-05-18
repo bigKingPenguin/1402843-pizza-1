@@ -14,7 +14,7 @@
           <Button
             buttonText="Создать пиццу"
             buttonClass="button button--green"
-            @click="router.push('/')"
+            @click="router.push(ROUTE_MAIN)"
           />
         </div>
 
@@ -64,7 +64,7 @@
   import {useRouter} from 'vue-router';
   import OrderSubmitPopup from '@/components/modals/OrderSubmitPopup.vue';
   import {VueFinalModal} from 'vue-final-modal';
-  import {PIZZA} from '@/common/const/constants';
+  import {PIZZA, ROUTE_MAIN, ROUTE_ORDERS} from '@/common/const/constants';
   import {getUserAddress} from '@/services/address.service';
 
   export default {
@@ -127,10 +127,9 @@
         store.commit('cart/resetCart');
         removeStorageData(PIZZA);
         if (user.value) {
-          //TODO: редирект на страницу истории заказов
-          router.push('/profile');
+          router.push(ROUTE_ORDERS);
         } else {
-          router.push('/');
+          router.push(ROUTE_MAIN);
         }
       };
 
@@ -142,6 +141,7 @@
         currentAddress,
         router,
         closePopup,
+        ROUTE_MAIN
       };
     },
   };

@@ -1,3 +1,9 @@
+// ROUTES
+export const ROUTE_MAIN = '/';
+export const ROUTE_CART = '/cart';
+export const ROUTE_PROFILE = '/profile';
+export const ROUTE_ORDERS = '/orders';
+
 // LOCAL STORAGE KEYS
 
 export const TOKEN = 'token';
