@@ -3,6 +3,12 @@
     :type="buttonType"
     :class="buttonClass"
   >
+    <span
+      v-if="hiddenSpanDescription"
+      class="visually-hidden"
+    >
+      {{ hiddenSpanDescription }}
+    </span>
     {{ buttonText }}
   </button>
 </template>
@@ -22,6 +28,10 @@
       buttonType: {
         type: String,
         default: 'button',
+      },
+      hiddenSpanDescription: {
+        type: String,
+        default: '',
       },
     },
   };

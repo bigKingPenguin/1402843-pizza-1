@@ -12,17 +12,15 @@
           <Button
             buttonType="button"
             buttonClass="icon icon--edit"
+            hiddenSpanDescription="Изменить адрес"
             @click="$emit('changeAddress', address.name)"
-          >
-            <span class="visually-hidden">Изменить адрес</span>
-          </Button>
+          />
           <Button
             buttonType="button"
             buttonClass="icon icon--delete"
+            hiddenSpanDescription="Удалить адрес"
             @click="deleteAddress(address.name)"
-          >
-            <span class="visually-hidden">Удалить адрес</span>
-          </Button>
+          />
         </div>
       </div>
 
@@ -49,7 +47,6 @@
       const addresses = computed(() => store.state.user.address);
 
       const deleteAddress = async (addressName) => {
-        console.log(addresses.value[addressName]);
         await removeAddress(addresses.value[addressName].id);
         emit('refreshPage');
       };

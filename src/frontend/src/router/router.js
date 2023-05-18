@@ -41,9 +41,7 @@ router.beforeEach(async (to) => {
       if (getStorageData(TOKEN)) await getUserData();
     }
     if (to.name === 'profile') {
-      if (user.value) {
-        return true;
-      } else {
+      if (!user.value) {
         store.commit('common/toggleLoginModal', true);
         return {
           name: 'main',

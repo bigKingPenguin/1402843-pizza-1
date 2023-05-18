@@ -9,7 +9,7 @@
       <UserData/>
 
       <Address
-        @changeAddress="changeAddress($event)"
+        @changeAddress="changeAddress"
         @refreshPage="refreshPage"
       />
 
@@ -68,7 +68,6 @@
       };
 
       const changeAddress = (address) => {
-        console.log(address);
         store.commit('user/addChangingAddress', address);
         isFormOpen.value = true;
       };
