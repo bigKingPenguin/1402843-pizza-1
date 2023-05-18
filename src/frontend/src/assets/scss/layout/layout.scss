@@ -39,6 +39,7 @@
 
   &--active {
     background-color: rgba($green-500, 0.1);
+    pointer-events: none;
   }
 
   &:hover {

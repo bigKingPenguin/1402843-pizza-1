@@ -45,7 +45,7 @@
 
 <script>
   import {DOUGH_DESCRIPTION} from '@/common/const/dictionary';
-  import {CART_PIZZA_MINIMUM_COUNT, PIZZA} from '@/common/const/constants';
+  import {CART_PIZZA_MINIMUM_COUNT, PIZZA, ROUTE_MAIN} from '@/common/const/constants';
   import ItemCounter from '@/common/input/ItemCounter.vue';
   import {useStore} from 'vuex';
   import {computed, ref} from 'vue';
@@ -107,7 +107,7 @@
 
       const editSelectedPizza = () => {
         store.commit('builder/toggleEditState');
-        router.push('/');
+        router.push(ROUTE_MAIN);
         store.commit('builder/editSelectedPizza', {
           name: props.pizzaData.name,
           editedName: props.pizzaData.name,
