@@ -12,13 +12,13 @@
           <Button
             buttonType="button"
             buttonClass="icon icon--edit"
-            hiddenSpanDescription="Изменить адрес"
+            hiddenDescription="Изменить адрес"
             @click="$emit('changeAddress', address.name)"
           />
           <Button
             buttonType="button"
             buttonClass="icon icon--delete"
-            hiddenSpanDescription="Удалить адрес"
+            hiddenDescription="Удалить адрес"
             @click="deleteAddress(address.name)"
           />
         </div>

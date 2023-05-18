@@ -4,10 +4,10 @@
     :class="buttonClass"
   >
     <span
-      v-if="hiddenSpanDescription"
+      v-if="hiddenDescription"
       class="visually-hidden"
     >
-      {{ hiddenSpanDescription }}
+      {{ hiddenDescription }}
     </span>
     {{ buttonText }}
   </button>
@@ -29,7 +29,7 @@
         type: String,
         default: 'button',
       },
-      hiddenSpanDescription: {
+      hiddenDescription: {
         type: String,
         default: '',
       },
